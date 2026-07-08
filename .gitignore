@@ -14,3 +14,7 @@ vmlinux
 # 忽略所有在 original-tasks 目录下的任务产生的编译临时产物
 original-tasks/**/objtool/
 original-tasks/**/scripts/
+*.tar.xz
+*.deb
+*.pyc
+original-tasks/**/task-deps/
