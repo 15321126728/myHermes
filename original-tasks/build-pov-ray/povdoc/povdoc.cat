@@ -1,0 +1,17 @@
+Persistence of Vision Raytracer POV-Ray 2.0 Catalog file.   
+
+Here are the contents of the POVDOC archive.
+It contains general documentation for POV-Ray and two sub-directories 
+full of standard include files and demo scenes.
+
+Each directory has a .CAT file describing the files it contains.  
+
+POVDOC.CAT          This catalog file.
+POVLEGAL.DOC        Important legal information
+POVINF.DOC          Where to obtaing POV-Ray files
+WHATSNEW.DOC        New feature list
+
+INCLUDE\*.*         Standard include files for scenes
+
+DEMO\*.*            Demonstration scene files
+

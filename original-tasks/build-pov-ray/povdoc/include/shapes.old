@@ -1,0 +1,192 @@
+// Persistence Of Vision Raytracer 2.0
+// Historical include file.
+
+// Old standard shapes include file
+// Included for historical comparison.  
+// Some shapes were changed
+// for POV-Ray Version 1.0.
+
+#declare Shapes_Old_Temp = version
+
+#version 2.0
+
+#declare Sphere = 
+ quadric 
+  {<1, 1, 1>,
+   <0, 0, 0>,
+   <0, 0, 0>, -1
+  }
+
+#declare Cylinder_X = 
+ quadric 
+  {<0, 1, 1>,
+   <0, 0, 0>,
+   <0, 0, 0>, -1
+  }
+
+#declare Cylinder_Y = 
+ quadric 
+  {<1, 0, 1>,
+   <0, 0, 0>,
+   <0, 0, 0>, -1
+  }
+
+#declare Cylinder_Z = 
+ quadric 
+  {<1, 1, 0>,
+   <0, 0, 0>,
+   <0, 0, 0>, -1
+  }
+
+#declare Cone_X = 
+ quadric 
+  {<-1, 1, 1>,
+   < 0, 0, 0>,
+   < 0, 0, 0>, 0
+  }
+
+#declare Cone_Y = 
+ quadric 
+  {<1, -1, 1>,
+   <0,  0, 0>,
+   <0,  0, 0>, 0
+  }
+
+#declare Cone_Z = 
+ quadric 
+  {<1, 1,-1>,
+   <0, 0, 0>,
+   <0, 0, 0>, 0
+  }
+
+// The Plane_nn objects were formerly defined as quadrics but now can
+// be redefined as plane because of v1.5 no longer requires object identifiers
+// to be a specific type.
+
+#declare Plane_YZ = plane {x,0}
+
+#declare Plane_XZ = plane {y,0}
+
+#declare Plane_XY = plane {z,0}
+
+/* y^2 + z^2 - x = 0 */
+#declare Paraboloid_X =
+ quadric
+  {< 0, 1, 1>,
+   < 0, 0, 0>,
+   <-1, 0, 0>, 0
+  }
+
+/* x^2 + z^2 - y = 0 */
+#declare Paraboloid_Y =
+ quadric
+  {<1,  0,  1>,
+   <0,  0,  0>,
+   <0, -1,  0>, 0
+  }
+
+/* x^2 + y^2 - z = 0 */
+#declare Paraboloid_Z =
+ quadric
+  {<1,  1,  0>,
+   <0,  0,  0>,
+   <0,  0, -1>, 0
+  }
+
+/* y - x^2 + z^2 = 0 */
+#declare Hyperboloid =
+ quadric
+  {<-1,  0,  1>,
+   < 0,  0,  0>,
+   < 0,  1,  0>, 0
+  }
+
+#declare Hyperboloid_Y =
+ quadric                 /* Vertical hyperboloid */
+  {<1, -1,  1>,          /*                      */
+   <0,  0,  0>,          /*            \   /     */
+   <0,  0,  0>, -1       /* Like this:  ) (      */
+  }                      /*            /   \     */
+
+// This primitive used to be an intersection of six planes.  For speed,
+// it is now a box and nothing else.
+#declare Cube = box { <-1, -1, -1>, <1, 1, 1> }
+
+#declare Tetrahedron = 
+ intersection 
+  {plane {-y,1}
+   plane { z,1 rotate <-30,  0,  0>}
+   plane { x,1 rotate <  0, 30, 30>}
+   plane {-x,1 rotate <  0,-30,-30>}
+  }
+
+#declare X_Disk =       /* Capped cylinder, Length in x axis */
+ intersection 
+  {object {Cylinder_X}
+   plane  { x,1}
+   plane  {-x,0}
+  }
+
+#declare Y_Disk =    /* Capped cylinder, Length in y axis */
+ intersection
+  {object {Cylinder_Y}
+   plane  { y,1}
+   plane  {-y,0}
+  }
+
+#declare Z_Disk =    /* Capped cylinder, Length in z axis */
+ intersection
+  {object {Cylinder_Z}
+   plane  {-z,1}
+   plane  { z,0}
+  }
+#declare Hexagon =             /* Hexagonal Solid, axis along x */
+ intersection                  /* Rotate 90 in z axis to stand up */
+  {plane {z,1}
+   plane {z,1 rotate < 60, 0, 0>}
+   plane {z,1 rotate <120, 0, 0>}
+   plane {z,1 rotate <180, 0, 0>}
+   plane {z,1 rotate <240, 0, 0>}
+   plane {z,1 rotate <300, 0, 0>}
+   plane {x,1}
+   plane {-x,1}
+  }
+
+#declare Rhomboid =            /* Three Dimensional 4-Sided Diamond */
+ intersection 
+  {plane {-x,1 rotate <0, 0, -30>}
+   plane { x,1 rotate <0, 0, -30>}
+   plane { z,1}
+   plane {-z,1}
+   plane { y,1}
+   plane {-y,1}
+  }
+
+#declare Square_X =   /* Scale-able plane in x */
+ union 
+  {triangle {<0, 1, -1>, <0, -1, 1>, <1, 1, 1>}
+   triangle {<0, 1, -1>, <0, -1, 1>, <0,-1,-1>}
+  }
+
+#declare Square_Y =  /* Scale-able plane in y */
+ union 
+  {triangle {<-1, 0, 1>, <1, 0, -1>, < 1, 0,  1>}
+   triangle {<-1, 0, 1>, <1, 0, -1>, <-1, 0, -1>}
+  }
+
+#declare Square_Z =  /* Scale-able plane in z */
+ union 
+  {triangle {<-1, 1, 0>, <1, -1, 0>, <-1, -1, 0>}
+   triangle {<-1, 1, 0>, <1, -1, 0>, < 1,  1, 0>}
+  }
+
+#declare Pyramid =
+ union 
+  {triangle {<-1, 0, -1>, <+1, 0, -1>, <0, 1, 0>}
+   triangle {<+1, 0, -1>, <+1, 0, +1>, <0, 1, 0>}
+   triangle {<-1, 0, +1>, <+1, 0, +1>, <0, 1, 0>}
+   triangle {<-1, 0, +1>, <-1, 0, -1>, <0, 1, 0>}
+   object {Square_Y}
+  }
+
+#version Shapes_Old_Temp 

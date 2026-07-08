@@ -1,0 +1,40 @@
+root@b39e21872f90:/app# bash /tests/run-tests.sh; tmux wait -S done
+Reading package lists... Done
+E: Could not get lock /var/lib/apt/lists/lock. It is held by process 957 (apt-get)
+N: Be aware that removing the lock file is not a solution and may break your system.
+E: Unable to lock directory /var/lib/apt/lists/
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+E: Unable to locate package curl
+/tests/run-tests.sh: line 8: curl: command not found
+/tests/run-tests.sh: line 10: /root/.local/bin/env: No such file or directory
+/tests/run-tests.sh: line 18: uv: command not found
+/tests/run-tests.sh: line 20: .tbench-testing/bin/activate: No such file or directory
+/tests/run-tests.sh: line 21: uv: command not found
+/tests/run-tests.sh: line 22: uv: command not found
+/tests/run-tests.sh: line 24: uv: command not found
+root@b39e21872f90:/app#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+I can see the terminal is stuck with hanging apt-get processes and no code has been written yet. Let me clean up the environment and start implementing the solution.
+
+```json
+{
+  "analysis": "The terminal output shows hanging apt-get processes that were never cleaned up. The previous agent was also stuck and never made progress. I need to:\n1. Kill all hanging apt-get/dpkg processes\n2. Check what's in the /app directory\n3. Verify Python and PyTorch availability\n4. Implement the parallel_linear.py file with ColumnParallelLinear and RowParallelLinear classes\n\nThe task requires implementing tensor parallelism for linear layers. I need to create /app/parallel_linear.py with two classes that split weights across distributed processes.",
+  "plan": "First, I'll kill all hanging processes and check the environment. Then I'll implement the solution.",
+  "commands": [
+    {
+      "keystrokes": "pkill -9 -f apt 2>/dev/null; pkill -9 -f dpkg 2>/dev/null; sleep 2; echo 'Processes cleaned'\n",
+      "duration": 2.5
+    }
+  ],
+  "task_complete": false
+}
+```

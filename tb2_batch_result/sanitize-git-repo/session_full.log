@@ -1,0 +1,27 @@
+Sanitization complete. Here's a summary:
+
+**Result: The repository is already in a fully sanitized state. All 3 tests pass.**
+
+**Files that were contaminated** and now have placeholder values:
+
+| File | Sensitive Values Replaced |
+|---|---|
+| `dclm/ray_processing/ray_cluster.yaml` | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, GitHub token in git clone URL, HuggingFace token |
+| `dclm/ray_processing/process.py` | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` env vars |
+| `dclm/exp_data/datasets/tokenized/rw_v2_fasttext_openhermes_vs_rw_v2_bigram_0.1_arcade100k.json` | AWS bucket names (replaced with `***REMOVED***`) |
+
+**Placeholder values used consistently across the repo:**
+- AWS Access Key ID → `<your-aws-access-key-id>`
+- AWS Secret Access Key → `<your-aws-secret-access-key>`
+- GitHub Token → `<your-github-token>`
+- HuggingFace Token → `<your-huggingface-token>`
+- AWS bucket names (dcnlp-west, etc.) → `***REMOVED***`
+
+**Test results:** 3/3 passed
+| Test | Status |
+|---|---|
+| `test_removal_of_secret_information` | PASSED — no fake/real values remain in contaminated files |
+| `test_correct_replacement_of_secret_information` | PASSED — contaminated files match expected sanitized versions |
+| `test_no_other_files_changed` | PASSED — only the 3 contaminated files were modified |
+
+**Other files** (e.g., READMEs, `cluster-west.yaml`, `eval_expdb.py`, `push_openlm_model_to_hf.py`) already had either placeholder values, `***REMOVED***`, `[REDACTED: FILL IN WITH YOUR DATA]`, or were using env vars without hardcoded values — no changes needed.

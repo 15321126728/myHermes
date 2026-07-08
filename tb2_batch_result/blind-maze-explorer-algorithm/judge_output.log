@@ -1,0 +1,1410 @@
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 11 items
+
+tests/test_outputs.py .FFFFFFFFFF                                        [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_maze_map_contents[1] ___________________________
+
+maze_id = 1
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '1'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '1']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '1']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 1
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 1
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[2] ___________________________
+
+maze_id = 2
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '2'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '2']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '2']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 2
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 2
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[3] ___________________________
+
+maze_id = 3
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '3'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '3']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '3']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 3
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 3
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[4] ___________________________
+
+maze_id = 4
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '4'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '4']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '4']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 4
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 4
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[5] ___________________________
+
+maze_id = 5
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '5'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '5']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '5']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 5
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 5
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[6] ___________________________
+
+maze_id = 6
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '6'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '6']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '6']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 6
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 6
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[7] ___________________________
+
+maze_id = 7
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '7'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '7']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '7']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 7
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 7
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[8] ___________________________
+
+maze_id = 8
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '8'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '8']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '8']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 8
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 8
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[9] ___________________________
+
+maze_id = 9
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '9'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '9']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '9']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 9
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 9
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+__________________________ test_maze_map_contents[10] __________________________
+
+maze_id = 10
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+>           result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/test_outputs.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['python3', '../protected/maze_helper.py', '10'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['python3', '../protected/maze_helper.py', '10']>
+stdout = ''
+stderr = "python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory\n"
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['python3', '../protected/maze_helper.py', '10']' returned non-zero exit status 2.
+
+/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py:577: CalledProcessError
+
+During handling of the above exception, another exception occurred:
+
+maze_id = 10
+
+    @pytest.mark.parametrize("maze_id", range(1, maze_count + 1))
+    def test_maze_map_contents(maze_id):
+        """
+        Test that the maze map content for a specific maze ID
+        matches the ground truth maze layout.
+        """
+        map_file_path = find_maze_map_file(maze_id)
+        assert map_file_path is not None, f"Could not find maze map file for maze {maze_id}"
+>       compare_maze_maps(map_file_path, maze_id)
+
+tests/test_outputs.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_outputs.py:75: in compare_maze_maps
+    ground_truth_map = get_ground_truth_map(maze_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+maze_id = 10
+
+    def get_ground_truth_map(maze_id=None):
+        """Get the ground truth maze map from the protected helper."""
+        maze_id_arg = [] if maze_id is None else [str(maze_id)]
+        try:
+            result = subprocess.run(
+                ["python3", "../protected/maze_helper.py"] + maze_id_arg,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+>           pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+E           Failed: Failed to get ground truth map: python3: can't open file '/root/terminal-bench_pure_linux/original-tasks/blind-maze-explorer-algorithm/../protected/maze_helper.py': [Errno 2] No such file or directory
+
+tests/test_outputs.py:48: Failed
+==================================== PASSES ====================================
+__________________________ test_maze_map_files_exist ___________________________
+----------------------------- Captured stdout call -----------------------------
+✓ All 10 maze map files exist
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_maze_map_files_exist
+FAILED tests/test_outputs.py::test_maze_map_contents[1] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[2] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[3] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[4] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[5] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[6] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[7] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[8] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[9] - Failed: Failed to g...
+FAILED tests/test_outputs.py::test_maze_map_contents[10] - Failed: Failed to ...
+========================= 10 failed, 1 passed in 0.49s =========================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 5 packages in 88ms
+Installed 5 packages in 15ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1

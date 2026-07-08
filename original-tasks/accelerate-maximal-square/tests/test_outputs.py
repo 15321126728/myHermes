@@ -4,16 +4,33 @@
 import os
 import random
 import time
+import sys
 
 import numpy as np
 
 """ Try to find: maximal_square.maximal_square() """
-try:
-    # Change to the module's directory so relative imports work
-    os.chdir("/app")
-    import maximal_square
-except Exception as e:
-    assert False, f"Error importing maximal_square module: {e}"
+# Try /app/ first (Docker test containers)
+_imported = False
+_app_path = "/app"
+if os.path.isdir(_app_path) and os.path.exists(os.path.join(_app_path, "maximal_square.py")):
+    try:
+        os.chdir(_app_path)
+        import maximal_square
+        _imported = True
+    except Exception:
+        pass
+
+if not _imported:
+    # Fall back to local task directory
+    task_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, task_dir)
+    os.chdir(task_dir)
+    try:
+        import maximal_square
+        _imported = True
+    except Exception as e:
+        assert False, f"Error importing maximal_square module: {e}"
+
 # Check whether can access maximal_square.maximal_square function
 try:
     maximal_square.maximal_square

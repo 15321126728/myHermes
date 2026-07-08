@@ -5,7 +5,7 @@ apt-get update
 apt-get install -y curl
 
 # Install uv
-curl -LsSf https://astral.sh/uv/0.7.13/install.sh | sh
+echo "[TB2] Skip UV download from Github"
 source $HOME/.local/bin/env
 
 # Check if we're in a valid working directory
@@ -18,6 +18,6 @@ uv venv .tbench-testing
 source .tbench-testing/bin/activate
 uv pip install pytest==8.4.1
 
-cp $TEST_DIR/test.py /app/test.py
+cp $TEST_DIR/test.py ./test.py
 
-uv run pytest $TEST_DIR/test_outputs.py -rA
+.tbench-testing/bin/python -m pytest $TEST_DIR/test_outputs.py -rA

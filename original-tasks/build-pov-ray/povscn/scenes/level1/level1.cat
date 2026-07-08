@@ -1,0 +1,48 @@
+Persistence of Vision Raytracer Version 2.0
+--------------------------------------------
+These are the level 1 example scene files for use with the Persistence
+of Vision Raytracer version 2.0.
+  
+To use the POV-Ray ray tracer, you also need POVDOC.ZIP for documentation, 
+and an executable for your computer. See the file POVINFO.TXT for
+more information.
+
+These files should be available from the same source from where 
+you received this file.
+------------------------------------------------------------------------
+
+
+Files contained in LEVEL1 sub-directory
+---------------------------------------
+BALLBOX1.POV  <- Sphere sits inside cage.  CSG, box, octaves examples.
+BASICVUE.POV  <- A good starting point for new images.  Keep a copy around.
+BLOB.POV      <- Demonstrates use of blob primitive
+BOX.POV       <- Demonstrates use of box primitive
+BUMPMAP_.GIF  <- General mandelbrot GIF image for bump-map testing
+BUMPMAP.POV   <- Fractal image bumped into a blue sphere.
+CANTELOP.POV  <- Simple, but interesting CSG and ONION example.
+CHECKER2.POV  <- Sphere with checkerboard cutouts.  More tricks w/alpha.
+CLIPTST2.POV  <- A (new) example of the clipping function.
+DISH.POV      <- Satellite dish by Aaron Collins.  Add-Ur-Own textures.
+DODEC2.POV    <- Various new wood textures displayed on tetrahedrons.
+FILTFUN.POV   <- Some interesting tricks using filtering (alpha) components.
+FOGTST.POV    <- A demonstration of atmospheric fog.
+GLASS.POV     <- Example of refraction, ior.  Simple.
+GLASSDISH.POV <- Swedish-style crystal dish.  Uses Glass3 texture.
+GRANITE.POV   <- A test of the Granite texture type.
+IMAGETST.POV  <- Example of spherical and planar imagemapping.
+INTEE1.POV    <- Intersected Tee of cylinders.  Nice stone texture!
+LASER.POV     <- Tricks with spotlights and alpha color values.
+LEVEL1.CAT    <- This description file.
+LITE.POV      <- Simple test file to demonstrate planar image mapping.
+MAPPER.POV    <- Another example of spherical and planar imagemapping.
+MAPPR2.POV    <- Example of imagemaps on cylinder, hyperboloid & paraboloid.
+MATMAP.POV    <- Sample of material mapping.
+POVMAP.GIF    <- General GIF image for testing mapping orientation & scale
+PVINTERP.POV  <- Compares bilinear and norm dist interpolation on split sphere.
+SHADOWS.POV   <- Extended (Area) Light Source test - 3 objects
+SIMPLE.POV    <- A good starting point for your own images.
+SPOTLITE.POV  <- Demonstration of spotlight useage.
+SUNSET.POV    <- A classic David Buck original.
+SUNSET1.POV   <- A variation of SUNSET.POV.
+WINDOW.POV    <- Environment shading, I guess you could call it. Aaron Collins.

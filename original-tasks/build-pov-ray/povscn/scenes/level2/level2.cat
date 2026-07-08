@@ -1,0 +1,56 @@
+Persistence of Vision Raytracer Version 2.0
+--------------------------------------------
+These are the level 2 example scene files for use with the Persistence
+of Vision Raytracer version 2.0.
+  
+To use the POV-Ray ray tracer, you also need POVDOC.ZIP for documentation, 
+and an executable for your computer. See the file POVINFO.TXT for
+more information.
+
+These files should be available from the same source from where 
+you received this file.
+------------------------------------------------------------------------
+
+
+Files contained in LEVEL2 sub-directory
+---------------------------------------
+ARCHES.POV    <- Arches standing in water - an Aquatic McDonalds?
+CLUSTER.POV   <- A cluster of mirrored spheres - classic test scene
+CRYSTAL.POV   <- A Crystal Ball on a Checkerboard - classic IOR test
+EIGHT.POV     <- Behind the 8-Ball!
+EIGHT.IFF     <- Image map for EIGHT.POV
+FRACT003.GIF  <- Image/Height map for SUNSETHF.POV
+HFCLIP.POV    <- Height Field Clipped (Fractured) dowel
+ILLUM1.POV    <- Stacked Glass Balls - Illumination test 1
+ILLUM2.POV    <- Stacked Glass Balls - Illumination test 2
+IORTEST.POV   <- IOR Test
+LAMPPOST.POV  <- Old fashioned lamppost on a reflective floor
+LEVEL2.CAT    <- This description file
+LPOPS1.POV    <- Surreal Lollipops 1
+LPOPS2.POV    <- Surreal Lollipops 2
+MAGGLASS.POV  <- Magnifying Glass
+MTMANDJ.GIF   <- Low resolution version of bump map for MTMAND.POV
+MTMAND.POT    <- Low resolution version of height field for MTMAND.POV
+MTMAND.PAR    <- FRACTINT Parameter file for MTMAND Fractal
+MTMAND.POV    <- Mount Mandelbrot! - 3-D Mandelscape
+PACMAN.IFF    <- Image map for PACMAN.POV
+PACMAN.POV    <- Our Hero!  Pac-Man doing what he does best!
+PAWNS.POV     <- Three pawns on a chessboard - wood study
+PLANET.POV    <- So this is how they do the STNG title scenes!
+PLASMA2.GIF   <- Image/Height map for HFCLIP.POV
+POLYWOOD.POV  <- Wooden Polyhedron CSG on a grassy hill
+POOLBALL.INC  <- Include file for POOLBALL.POV
+POOLBALL.POV  <- A collection of pool balls on a table w/cue
+ROMO.POV      <- Reflections of a fertility symbol
+ROOM.POV      <- Empty Room for designing your own scenes
+SKYVASE.POV   <- Interesting use of Sky texture for a marble vase
+SMOKE.POV     <- Dark smoky glass ball ("black" filter test)
+SOFT.POV      <- The letters "SOFT" casting soft-shadows (Area Lights)
+SPLINE.INC    <- Include file for SPLINE.POV
+SPLINE.POV    <- Bezier Spline Test - the word "Merry" w/checkers
+STONEWAL.POV  <- A Stone Wall, Jackson!
+SUNSETHF.POV  <- Sunset over the Height Field Mountain Range
+TETRA.POV     <- 4 Tetrahedrons
+WATERBOW.POV  <- A small bowl with water in it on a wood table
+WTORUS.POV    <- A wooden torus!
+

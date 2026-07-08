@@ -1,0 +1,80 @@
+{
+    "lockfile_version": "1.0",
+    "created_at": "2026-07-07T21:45:04.549329+08:00",
+    "invocation": {
+        "command": "main.py",
+        "args": [
+            "run",
+            "--dataset-path",
+            "/root/terminal-bench_pure_linux/original-tasks",
+            "--task-id",
+            "torch-tensor-parallelism",
+            "--run-id",
+            "torch-tensor-parallelism-deepseek",
+            "--agent-import-path",
+            "terminal_bench.agents.replayable_hermes:ReplayableHermesAgent",
+            "--model",
+            "deepseek/deepseek-chat",
+            "--agent-kwarg",
+            "api_base=https://api.deepseek.com/v1",
+            "--agent-kwarg",
+            "max_episodes=20",
+            "--agent-kwarg",
+            "intervention_mode=none",
+            "--agent-kwarg",
+            "trajectory_output_path=/tmp/torch-tensor-parallelism-deepseek-trajectory.json",
+            "--n-concurrent-trials",
+            "1",
+            "--n-attempts",
+            "1",
+            "--global-agent-timeout-sec",
+            "900",
+            "--global-test-timeout-sec",
+            "600"
+        ]
+    },
+    "harness": {
+        "package": "terminal-bench",
+        "version": "0.2.18",
+        "is_editable_installation": true
+    },
+    "agent": {
+        "name": "replayable-hermes",
+        "import_path": "terminal_bench.agents.replayable_hermes:ReplayableHermesAgent",
+        "model_name": "deepseek/deepseek-chat",
+        "extra_kwargs": {
+            "no_rebuild": false,
+            "api_base": "https://api.deepseek.com/v1",
+            "max_episodes": 20,
+            "intervention_mode": "none",
+            "trajectory_output_path": "/tmp/torch-tensor-parallelism-deepseek-trajectory.json",
+            "model_name": "deepseek/deepseek-chat"
+        }
+    },
+    "run_config": {
+        "log_level": "info",
+        "livestream": false,
+        "n_concurrent_trials": 1,
+        "n_attempts": 1,
+        "no_rebuild": false,
+        "cleanup": true,
+        "global_timeout_multiplier": 1.0,
+        "global_agent_timeout_sec": 900.0,
+        "global_test_timeout_sec": 600.0
+    },
+    "dataset": {
+        "name": null,
+        "version": null,
+        "local_path": "/root/terminal-bench_pure_linux/original-tasks",
+        "task_ids": [
+            "torch-tensor-parallelism"
+        ],
+        "registry_url": null,
+        "local_registry_path": null
+    },
+    "local_config": {
+        "output_path": "runs",
+        "run_id": "torch-tensor-parallelism-deepseek",
+        "upload_results": false
+    }
+}

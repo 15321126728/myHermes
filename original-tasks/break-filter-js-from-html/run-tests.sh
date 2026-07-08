@@ -7,7 +7,7 @@ apt-get update
 apt-get install -y curl
 
 # Install uv
-curl -LsSf https://astral.sh/uv/0.7.13/install.sh | sh
+echo "[TB2] Skip UV download from Github"
 
 source $HOME/.local/bin/env
 
@@ -24,4 +24,4 @@ uv pip install pytest==8.4.1 selenium==4.35.0 beautifulsoup4==4.13.5
 
 # Run pytest
 
-uv run pytest $TEST_DIR/test_outputs.py -rA
+.tbench-testing/bin/python -m pytest $TEST_DIR/test_outputs.py -rA

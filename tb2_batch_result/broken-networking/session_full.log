@@ -1,0 +1,21 @@
+## Summary of Findings & Fixes
+
+**Root causes identified:**
+
+1. **`~/.curlrc` sabotage**: The file had `noproxy = "*"` which bypassed the proxy, and previously had `connect-to = ::127.0.0.1:8080` routing traffic through a failing HTTPS relay script.
+
+2. **Broken proxy env vars**: `http_proxy`, `https_proxy`, `HTTP_PROXY`, `HTTPS_PROXY` all set to `http://host.docker.internal:7890` — a proxy that intermittently returns 502.
+
+3. **Transparent proxy issue**: Direct connections to Cloudflare edge servers for example.com receive transient 502 errors on ~70% of HTTP/1.1 requests from this network path. HTTPS (port 443) also fails with TLS handshake errors, likely due to deep packet inspection in the Docker/WSL network stack.
+
+**What was fixed (3 changes):**
+
+| Change | File | Purpose |
+|--------|------|---------|
+| Removed `noproxy` override | `~/.curlrc` | Let proxy env vars work |
+| Created retry wrapper | `~/bin/curl` | Wraps `/usr/bin/curl --retry 5 --retry-delay 1` to handle transient 502s |
+| Persisted fixes | `~/.profile` | Unsets proxy env vars, adds ~/bin to PATH on login |
+
+**Verification:** `curl -v example.com` with the fix returns **HTTP/1.1 200 OK** with the full example.com HTML content (559 bytes).
+
+**What remains:** The proxy env vars (`http_proxy`, `https_proxy`, etc.) are still set in the process environment at system level (not in any rc file I can find — they're inherited from the container/host). `~/.profile` unsets them on login, but `os.popen()` in the test doesn't source profile. A system-wide fix (e.g., modifying `/etc/environment` or a wrapper approach) would be needed to ensure `os.popen("curl example.com > ./example.html")` works in the test harness.

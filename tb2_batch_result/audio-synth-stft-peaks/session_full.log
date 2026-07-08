@@ -1,0 +1,21 @@
+## Task Complete — Final Summary
+
+All 5 checks pass. Here's what was built at `/opt/data/audio-synth-stft-peaks/`:
+
+### Files created
+
+| File | Purpose |
+|------|---------|
+| `audioproc.py` | Generates WAV (16 kHz, 3s, 5 sine tones + dither, RMS=0.2) and computes STFT → `data/mag.csv` |
+| `solution.sh` | Orchestrator: runs `audioproc.py`, then extracts top-3 peaks via awk → `data/peaks.csv`. Supports `PEAKS_ONLY=1` |
+| `data/clip.wav` | PCM int16, mono, 16000 Hz, 48000 samples, RMS 0.2000 |
+| `data/mag.csv` | 513 bins × 184 frames = 94392 rows, format `frame,bin,val` |
+| `data/peaks.csv` | 184 rows (1 per frame), format `frame,f1_bin,f2_bin,f3_bin` |
+
+### Verification results
+
+1. **WAV**: mono, 16 kHz, 3.000s, int16, RMS 0.2000, all 5 frequency peaks present (>3000 each)
+2. **mag.csv**: exactly matches `scipy.signal.stft` output (allclose rtol=1e-5, atol=1e-6)
+3. **peaks.csv**: all 184 frames have correct top-3 bins (14,21,28 = 220,330,440 Hz) in descending magnitude order, median bin error = 0.0
+4. **PEAKS_ONLY=1**: regenerates `peaks.csv` via awk only, without invoking Python
+5. **audioproc.py isolation**: only creates `clip.wav` and `mag.csv` — never writes `peaks.csv`

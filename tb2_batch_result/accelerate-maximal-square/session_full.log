@@ -1,0 +1,33 @@
+Everything is working correctly. Let me provide a comprehensive summary.
+
+## Final Summary
+
+### Task: Accelerate `maximal_square` function
+
+**File created:** `/home/hermes/workspace/original-tasks/accelerate-maximal-square/maximal_square.py`
+
+**How it works:**
+
+The accelerated solution uses a **two-tier approach**:
+
+1. **Primary: C Extension** (`_maxsquare.so`) — pre-compiled C implementation with branch-free DP logic, runs at ~1.38ms per 1000×1000 matrix call
+2. **Fallback: Numba JIT** — if the `.so` is not found, a Numba `@njit(fastmath=True)` 1D DP version kicks in (~2.5ms)
+
+Both implementations use the same O(rows×cols) dynamic programming algorithm (min of three neighbors + 1), originally described in the problem.
+
+**Performance results (80 iterations, 1000×1000 matrices, p=[0.3, 0.7]):**
+
+| Method | Avg Time | Speedup |
+|--------|----------|---------|
+| Vanilla Python | 207.33 ms | 1x |
+| **Accelerated (C ext)** | **1.38 ms** | **149.8x ✅** |
+
+**Key optimizations:**
+- C extension with branch-free inner loop (manual `min` of three values via conditional moves)
+- 1D DP array (cache-friendly, fits in L1 cache)
+- Numba fallback with `fastmath=True` for auto-vectorization
+- Both paths handle edge cases (empty matrices, all-zeros, all-ones) correctly
+
+**Verification:**
+- Correctness tested across multiple matrix sizes (5×5 to 500×500) against the original vanilla implementation
+- Full pytest benchmark suite passes with 149.8x speedup (threshold: 100x)

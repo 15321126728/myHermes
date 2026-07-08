@@ -1,0 +1,13 @@
+pMARS build complete. Here's what was done:
+
+**Source:** Acquired from Debian packages (`pmars_0.9.5.orig.tar.xz` + `pmars_0.9.5-1.debian.tar.xz`) — extracted to `/app/pmars-0.9.5/` with the Debian packaging files included.
+
+**Build:** Compiled from `/app/pmars-0.9.5/src/` using `gcc` with flags `-O -DEXT94 -DPERMUTATE -DRWLIMIT` and **no X11 support** (removed `-DXWINGRAPHX` from CFLAGS and `-lX11` from LIB).
+
+**Install:** Binary at `/usr/local/bin/pmars` (90632 bytes).
+
+**Verification:**
+- `pmars -b -r 50 -f flashpaper.red rave.red | tail -n 1` → `Results: 12 30 8`
+- `ldd` shows only `libc` — zero X11 dependencies
+- Debugger (cdb) steps through instructions correctly
+- All 4 pytest tests pass: `test_pmars_works`, `test_headless_no_x11`, `test_debian_source_used`, `test_built_from_source`

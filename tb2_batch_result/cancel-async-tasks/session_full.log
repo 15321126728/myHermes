@@ -1,0 +1,25 @@
+## Summary
+
+Created **`/opt/data/cancel-async-tasks/run.py`** with the `async run_tasks(tasks, max_concurrent)` function.
+
+### Implementation
+
+The function uses an `asyncio.Semaphore` to limit concurrency and tracks in-flight tasks in a set. Key behavior:
+
+- **Normal operation**: runs tasks up to `max_concurrent` at a time via a semaphore-guarded worker
+- **On cancellation** (`KeyboardInterrupt` or `CancelledError`):
+  1. Sets a `cancel_requested` flag — tasks that acquire the semaphore afterward bail out immediately
+  2. Cancels tasks still **waiting** for the semaphore (never started)
+  3. **Leaves running tasks alone** — they finish their payload including any `finally`/context-manager cleanup
+  4. Waits for all in-flight tasks to complete before re-raising the cancellation
+
+### Tests passed
+
+| Test | Result |
+|---|---|
+| Normal concurrency (4 tasks × 0.5s, max_concurrent=2) → ~1.0s | PASS |
+| Cancellation — in-flight tasks' cleanup (finally blocks) still executes | PASS |
+| Empty task list | PASS |
+| Single task | PASS |
+| Sequential (max_concurrent=1) | PASS |
+| Concurrency never exceeds limit (max_concurrent=4, 20 tasks) | PASS |

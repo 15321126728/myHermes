@@ -1,0 +1,44 @@
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 3 items
+
+tests/test_outputs.py ...                                                [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_removal_of_secret_information
+PASSED tests/test_outputs.py::test_correct_replacement_of_secret_information
+PASSED tests/test_outputs.py::test_no_other_files_changed
+============================== 3 passed in 0.43s ===============================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 5 packages in 43ms
+Installed 5 packages in 20ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 3 packages in 287ms
+Installed 3 packages in 15ms
+ + gitdb==4.0.12
+ + gitpython==3.1.44
+ + smmap==5.0.3

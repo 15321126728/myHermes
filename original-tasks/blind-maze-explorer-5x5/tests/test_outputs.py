@@ -9,16 +9,27 @@ import pytest
 
 def get_ground_truth_map():
     """Get the ground truth maze map from the protected helper."""
-    try:
-        result = subprocess.run(
-            ["python3", "/protected/maze_helper.py"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        pytest.fail(f"Failed to get ground truth map: {e.stderr}")
+    # Try the expected path first, then fallback to local path
+    helper_paths = [
+        "/protected/maze_helper.py",
+        "/opt/data/blind-maze-explorer-5x5/protected/maze_helper.py",
+        "protected/maze_helper.py",
+    ]
+    for helper in helper_paths:
+        if Path(helper).exists():
+            try:
+                result = subprocess.run(
+                    ["python3", helper],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                return result.stdout.strip()
+            except subprocess.CalledProcessError:
+                continue
+            except FileNotFoundError:
+                continue
+    pytest.fail("Failed to get ground truth map: maze_helper.py not found")
 
 
 def find_maze_map_file():
@@ -28,7 +39,7 @@ def find_maze_map_file():
     """
     # Potential locations to check, in order of preference
     potential_locations = [
-        Path("/app/maze_map.txt"),  # Expected location as specified in task
+        Path("./maze_map.txt"),  # Expected location as specified in task
         # Path("./maze_map.txt"),     # Current directory
         # Path("/root/maze_map.txt"), # Root user's home
         # Path("/home/maze_map.txt"), # Home directory
@@ -55,13 +66,12 @@ def find_maze_map_file():
                 "f",
                 "-not",
                 "-path",
-                "*/\\.*",
+                "*/\\\\.*",
                 "-maxdepth",
                 "4",
             ],
             capture_output=True,
             text=True,
-            check=True,
         )
 
         paths = result.stdout.strip().split("\n")
@@ -72,7 +82,7 @@ def find_maze_map_file():
             print(f"Found maze_map.txt at: {paths[0]}")
             return Path(paths[0])
 
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         print(f"Error searching for file: {e}")
 
     return None

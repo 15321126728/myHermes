@@ -1,0 +1,69 @@
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 2 items
+
+tests/test_outputs.py .F                                                 [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_curl_file_content ____________________________
+
+    def test_curl_file_content():
+        """Test that curl fetches the correct content from example.com with
+        expected HTML structure."""
+        os.popen("curl example.com > ./example.html").read()
+        text = open("./example.html").read()
+    
+        ok = 0
+        for line in content.split("\n"):
+            if line in text:
+                ok += 1
+    
+        # Just incase example.com changes in the future
+>       assert ok / len(content.split("\n")) > 0.9, "Did not read correct example content"
+E       AssertionError: Did not read correct example content
+E       assert (10 / 46) > 0.9
+E        +  where 46 = len(['<!doctype html>', '<html>', '<head>', '    <title>Example Domain</title>', '', '    <meta charset="utf-8" />', ...])
+E        +    where ['<!doctype html>', '<html>', '<head>', '    <title>Example Domain</title>', '', '    <meta charset="utf-8" />', ...] = <built-in method split of str object at 0x376268f0>('\n')
+E        +      where <built-in method split of str object at 0x376268f0> = '<!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n\n    <meta charset="utf-8" />\n    <meta http-eq...sion.</p>\n    <p><a href="https://www.iana.org/domains/example">More information...</a></p>\n</div>\n</body>\n</html>'.split
+
+tests/test_outputs.py:79: AssertionError
+----------------------------- Captured stderr call -----------------------------
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   559    0   559    0     0   6143      0 --:--:-- --:--:-- --:--:--  6211
+==================================== PASSES ====================================
+____________________________ test_curl_file_exists _____________________________
+----------------------------- Captured stderr call -----------------------------
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   559    0   559    0     0   5736      0 --:--:-- --:--:-- --:--:--  5762
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_curl_file_exists
+FAILED tests/test_outputs.py::test_curl_file_content - AssertionError: Did no...
+========================= 1 failed, 1 passed in 0.24s ==========================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 5 packages in 27ms
+Installed 5 packages in 24ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1

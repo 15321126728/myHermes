@@ -1,0 +1,41 @@
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 6 items
+
+tests/test_outputs.py ......                                             [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_run_py_file_exists
+PASSED tests/test_outputs.py::test_tasks_run_concurrently
+PASSED tests/test_outputs.py::test_tasks_obey_max_concurrent
+PASSED tests/test_outputs.py::test_tasks_cancel_below_max_concurrent
+PASSED tests/test_outputs.py::test_tasks_cancel_at_max_concurrent
+PASSED tests/test_outputs.py::test_tasks_cancel_above_max_concurrent
+============================== 6 passed in 13.76s ==============================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 5 packages in 65ms
+Installed 5 packages in 24ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1

@@ -1,0 +1,20 @@
+Looking in indexes: https://mirrors.aliyun.com/pypi/simple/
+Requirement already satisfied: pytest==8.4.1 in /usr/local/lib/python3.12/dist-packages (8.4.1)
+Requirement already satisfied: iniconfig>=1 in /usr/local/lib/python3.12/dist-packages (from pytest==8.4.1) (2.3.0)
+Requirement already satisfied: packaging>=20 in /usr/local/lib/python3.12/dist-packages (from pytest==8.4.1) (26.2)
+Requirement already satisfied: pluggy<2,>=1.5 in /usr/local/lib/python3.12/dist-packages (from pytest==8.4.1) (1.6.0)
+Requirement already satisfied: pygments>=2.7.2 in /usr/lib/python3/dist-packages (from pytest==8.4.1) (2.11.2)
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 2 items
+
+tests/test_outputs.py ..                                                 [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_pip_installed
+PASSED tests/test_outputs.py::test_pip_install
+============================== 2 passed in 0.57s ===============================
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.

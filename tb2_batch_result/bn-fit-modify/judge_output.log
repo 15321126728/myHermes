@@ -1,0 +1,52 @@
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Hit:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Fetched 128 kB in 1s (109 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 9 items
+
+tests/test_outputs.py .........                                          [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_bn_sample_exists
+PASSED tests/test_outputs.py::test_learned_dag_structure_exists
+PASSED tests/test_outputs.py::test_learned_dag_structure_csv_col_names
+PASSED tests/test_outputs.py::test_learned_dag_structure
+PASSED tests/test_outputs.py::test_intervened_dag_structure_exists
+PASSED tests/test_outputs.py::test_intervened_dag_structure_csv_col_names
+PASSED tests/test_outputs.py::test_intervened__data_structure
+PASSED tests/test_outputs.py::test_sampled_csv_col_names
+PASSED tests/test_outputs.py::test_sampled_data
+============================== 9 passed in 2.48s ===============================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 12 packages in 219ms
+Installed 12 packages in 56ms
+ + iniconfig==2.3.0
+ + numpy==2.5.1
+ + packaging==26.2
+ + pandas==2.3.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1
+ + python-dateutil==2.9.0.post0
+ + pytz==2026.2
+ + scipy==1.16.1
+ + six==1.17.0
+ + tzdata==2026.2

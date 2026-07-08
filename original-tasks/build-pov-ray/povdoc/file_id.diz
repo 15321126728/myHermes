@@ -1,0 +1,13 @@
+This archive contains the 
+documentation for the Persistence of
+Vision Raytracer, POV-Ray V2.0, 
+formatted in plain ASCII text for the
+IBM-PC and other systems.  Also 
+contains standard include files and
+some demo scenes.  Create your 
+own \POVRAY2 directory and un-zip
+this file using the -d option to 
+insure that the proper sub-directories
+are created.  Other files are needed.
+See POVINF.DOC from this library for 
+more information.

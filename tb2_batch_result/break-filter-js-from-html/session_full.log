@@ -1,0 +1,19 @@
+The bypass is confirmed working. The filter completely preserves the content because:
+
+1. **BeautifulSoup** treats `<!-->asdf<script>alert(1)</script> -->` as a Comment node - `soup("script")` only finds Tag elements, so the script survives
+2. **Chrome** parses `<!-->` as an empty comment (HTML5 spec: `>` in "Comment start state" immediately closes it), then renders `asdf<script>alert(1)</script> -->` as normal HTML content, executing the script
+3. **`str(soup)`** preserves Comment nodes verbatim in the output
+
+The `/opt/data/break-filter-js-from-html/out.html` already contains the working bypass.
+
+**Summary**: The challenge was to craft HTML that bypasses a filter which:
+- Removes `<script>` tags
+- Removes `<frame>`, `<iframe>`, `<object>`, `<embed>` tags  
+- Removes attributes starting with `"on"` (all event handlers)
+
+The bypass uses the **malformed HTML comment trick** (`<!-->`). BeautifulSoup treats `<!-->` as the start of a comment that swallows everything after it (including `<script>` tags), but browsers correctly parse `<!-->` as an empty comment, exposing the `alert(1)` script to execution.
+
+File content written to `/opt/data/break-filter-js-from-html/out.html`:
+```
+<!-->asdf<script>alert(1)</script> -->
+```

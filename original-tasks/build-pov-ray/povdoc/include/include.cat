@@ -1,0 +1,30 @@
+Persistence of Vision Raytracer Version 2.0
+--------------------------------------------
+These are the standard include files for use with the Persistence
+of Vision Raytracer version 2.0.
+  
+To use the POV-Ray ray tracer, you also need POVDOC.ZIP for documentation, 
+and an executable for your computer. See the file POVINFO.TXT for
+more information.
+
+These files should be available from the same source from where 
+you received this file.
+------------------------------------------------------------------------
+
+
+Persistence of Vision Raytracer Version 2.0
+Files contained in INCLUDE sub-directory
+----------------------------------------
+CHARS.INC     <- CSG'd letters, numbers, and puctuation marks
+COLORS.INC    <- Standard colors include file
+FOV.INC       <- Constants to define field of view
+INCLUDE.CAT   <- This file
+IOR.INC       <- Index of refraction constants
+ROUGH.GIF     <- General photo-quality GIF image for image map testing
+SHAPES.INC    <- Standard shapes
+SHAPES.OLD    <- Older version of SHAPES.INC
+SHAPES2.INC   <- Extra standard shapes
+SHAPESQ.INC   <- Quartic sample shapes
+STONES.INC    <- Lots of great stone textures by Mike Miller
+TEST.GIF      <- General GIF image for image, bump & material map testing
+TEXTURES.INC  <- Standard texture include file

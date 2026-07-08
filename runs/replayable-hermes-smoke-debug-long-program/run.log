@@ -1,0 +1,1512 @@
+Processing tasks in duration order (longest first):
++-----+--------------------+------------+------------+
+|   # | Task Name          | Duration   | Source     |
++=====+====================+============+============+
+|   1 | debug-long-program | 11m 30s    | calculated |
++-----+--------------------+------------+------------+
+Total tasks: 1
+Starting harness run
+Run ID: replayable-hermes-smoke-debug-long-program
+Running task: debug-long-program
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml up -d
+Docker compose command failed with exit code 1
+Command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml up -d
+STDOUT: #1 [internal] load local bake definitions
+#1 reading from stdin 843B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 310B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for ghcr.io/laude-institute/t-bench/python-3-13:20250620
+#3 DONE 8.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/3] FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5
+#5 resolve ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5 0.0s done
+#5 DONE 0.1s
+
+#5 [1/3] FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5
+#5 sha256:0a636c415da476f4cba82188fd035589c64eba8bf8dd6e522d45c8020d6c95e3 0B / 93B 0.2s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 0B / 13.35MB 0.2s
+#5 sha256:e81d26d6c5a732f0cff33c82eea14a6cbfa7b497ce0f65b5df2151430b34c33c 0B / 249B 0.2s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 0B / 3.51MB 0.2s
+#5 sha256:0a636c415da476f4cba82188fd035589c64eba8bf8dd6e522d45c8020d6c95e3 93B / 93B 0.8s
+#5 sha256:0a636c415da476f4cba82188fd035589c64eba8bf8dd6e522d45c8020d6c95e3 93B / 93B 0.8s done
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 0B / 12.58MB 0.2s
+#5 sha256:e81d26d6c5a732f0cff33c82eea14a6cbfa7b497ce0f65b5df2151430b34c33c 249B / 249B 1.4s done
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 0B / 28.21MB 0.2s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 1.05MB / 12.58MB 3.5s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 0B / 13.35MB 5.3s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 0B / 3.51MB 5.3s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 1.05MB / 3.51MB 5.4s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 2.10MB / 12.58MB 5.3s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 1.05MB / 28.21MB 5.3s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 3.15MB / 12.58MB 6.0s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 4.19MB / 12.58MB 6.8s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 2.10MB / 3.51MB 7.7s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 5.24MB / 12.58MB 7.5s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 1.05MB / 13.35MB 8.6s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 6.29MB / 12.58MB 8.4s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 3.15MB / 3.51MB 9.5s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 7.34MB / 12.58MB 9.0s
+#5 sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 3.51MB / 3.51MB 10.1s done
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 8.39MB / 12.58MB 9.6s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 3.15MB / 28.21MB 9.3s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 9.44MB / 12.58MB 10.4s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 10.49MB / 12.58MB 11.1s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 11.53MB / 12.58MB 12.0s
+#5 sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 12.58MB / 12.58MB 12.4s done
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 1.05MB / 13.35MB 13.7s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 5.24MB / 28.21MB 13.7s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 2.10MB / 13.35MB 15.8s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 7.34MB / 28.21MB 17.1s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 3.15MB / 13.35MB 20.7s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 9.44MB / 28.21MB 20.3s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 11.53MB / 28.21MB 22.8s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 4.19MB / 13.35MB 25.4s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 13.63MB / 28.21MB 25.2s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 15.73MB / 28.21MB 27.9s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 4.19MB / 13.35MB 30.6s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 5.24MB / 13.35MB 31.6s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 17.83MB / 28.21MB 30.9s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 19.92MB / 28.21MB 32.8s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 6.29MB / 13.35MB 35.4s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 22.02MB / 28.21MB 34.3s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 24.12MB / 28.21MB 36.1s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 7.34MB / 13.35MB 38.5s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 26.21MB / 28.21MB 37.5s
+#5 sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 28.21MB / 28.21MB 39.4s done
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 8.39MB / 13.35MB 40.9s
+#5 extracting sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d
+#5 extracting sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a6daa91d0cc55057d 0.7s done
+#5 extracting sha256:31fc40b7245b1b5a9c87e53d8a533c3f8bcd41cc4510e92a14a0f41828e77d45 0.1s done
+#5 extracting sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8
+#5 extracting sha256:b20e3a1a6b0d346f72ea74fcff4ac580894cd2c53b4876161d1f7fea56affce8 0.3s done
+#5 extracting sha256:e81d26d6c5a732f0cff33c82eea14a6cbfa7b497ce0f65b5df2151430b34c33c 0.0s done
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 9.44MB / 13.35MB 43.6s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 10.49MB / 13.35MB 46.0s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 11.53MB / 13.35MB 47.8s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 12.58MB / 13.35MB 49.9s
+#5 sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 13.35MB / 13.35MB 51.3s done
+#5 extracting sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2
+#5 extracting sha256:9a459d467f9a8890675e9a458f492ae843be088969c1e40b8bb2e7221b43f9e2 0.3s done
+#5 DONE 51.7s
+
+#5 [1/3] FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5
+#5 extracting sha256:0a636c415da476f4cba82188fd035589c64eba8bf8dd6e522d45c8020d6c95e3 0.0s done
+#5 DONE 51.7s
+
+#6 [2/3] RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+#6 2.818 Err:1 http://deb.debian.org/debian bookworm InRelease
+#6 2.818   502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 5.185 Err:2 http://deb.debian.org/debian bookworm-updates InRelease
+#6 5.185   502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.553 Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#6 7.553   502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.557 Reading package lists...
+#6 7.563 E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+#6 7.563 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.563 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm-updates/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.563 E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+#6 7.563 E: Failed to fetch http://deb.debian.org/debian-security/dists/bookworm-security/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.563 E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.
+#6 ERROR: process "/bin/sh -c apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+------
+ > [2/3] RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*:
+5.185   502  Bad Gateway [IP: 192.168.65.254 7890]
+7.553 Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+7.553   502  Bad Gateway [IP: 192.168.65.254 7890]
+7.557 Reading package lists...
+7.563 E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+7.563 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+7.563 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm-updates/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+7.563 E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+7.563 E: Failed to fetch http://deb.debian.org/debian-security/dists/bookworm-security/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+7.563 E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.
+------
+
+STDERR:  Image python:3.13-slim-bookworm Pulling 
+ Image tb__debug-long-program__client Pulling 
+ Image tb__debug-long-program__client pull access denied for tb__debug-long-program__client, repository does not exist or may require 'docker login' 
+ d229a71b9e51 Pulling fs layer 0B
+ 0e26001d5620 Pulling fs layer 0B
+ 68629629b516 Pulling fs layer 0B
+ c90b26812a02 Pulling fs layer 0B
+ 27c12de1833b Download complete 0B
+ d229a71b9e51 Download complete 0B
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Download complete 0B
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 3.146MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 3.146MB
+ 68629629b516 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 0e26001d5620 Downloading 3.146MB
+ 0e26001d5620 Downloading 3.146MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 3.146MB
+ 0e26001d5620 Downloading 3.146MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 3.146MB
+ 0e26001d5620 Downloading 3.146MB
+ 0e26001d5620 Download complete 0B
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 11.53MB
+ c90b26812a02 Downloading 9.437MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 11.53MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 11.53MB
+ c90b26812a02 Downloading 10.49MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ c90b26812a02 Downloading 10.49MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 13.63MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 13.63MB
+ c90b26812a02 Downloading 11.53MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 13.63MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ c90b26812a02 Downloading 11.53MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 14.68MB
+ c90b26812a02 Download complete 0B
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Download complete 0B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 0e26001d5620 Extracting 1B
+ 68629629b516 Pull complete 0B
+ 0e26001d5620 Pull complete 0B
+ c90b26812a02 Extracting 1B
+ c90b26812a02 Extracting 1B
+ c90b26812a02 Extracting 1B
+ d229a71b9e51 Pull complete 0B
+ c90b26812a02 Pull complete 0B
+ Image python:3.13-slim-bookworm Pulled 
+ Image tb__debug-long-program__client Building 
+Dockerfile:4
+
+--------------------
+
+   2 |     FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620
+
+   3 |     
+
+   4 | >>> RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+   5 |     
+
+   6 |     WORKDIR /app
+
+--------------------
+
+failed to solve: process "/bin/sh -c apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+
+
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml down
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml down --rmi all --volumes
+Harness execution failed for original-tasks/debug-long-program: Command '['docker', 'compose', '-p', 'debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program', '-f', '/root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml', 'up', '-d']' returned non-zero exit status 1.
+Traceback (most recent call last):
+  File "/root/terminal-bench_pure_linux/terminal_bench/harness/harness.py", line 1011, in _execute_single_trial
+    trial_results = self._run_trial(trial_handler)
+  File "/root/terminal-bench_pure_linux/terminal_bench/harness/harness.py", line 717, in _run_trial
+    with spin_up_terminal(
+         ~~~~~~~~~~~~~~~~^
+        client_container_name=trial_handler.client_container_name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        disable_recording=trial_handler.task.disable_asciinema,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as terminal:
+    ^
+  File "/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/terminal.py", line 176, in spin_up_terminal
+    terminal.start()
+    ~~~~~~~~~~~~~~^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/terminal.py", line 102, in start
+    self.container = self._compose_manager.start()
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/docker_compose_manager.py", line 128, in start
+    self._run_docker_compose_command(["up", "-d"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/docker_compose_manager.py", line 101, in _run_docker_compose_command
+    result = subprocess.run(
+        full_command,
+    ...<3 lines>...
+        text=True,
+    )
+  File "/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['docker', 'compose', '-p', 'debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program', '-f', '/root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml', 'up', '-d']' returned non-zero exit status 1.
+Processing tasks in duration order (longest first):
++-----+--------------------+------------+------------+
+|   # | Task Name          | Duration   | Source     |
++=====+====================+============+============+
+|   1 | debug-long-program | 11m 30s    | calculated |
++-----+--------------------+------------+------------+
+Total tasks: 1
+Task debug-long-program has partial artifacts from previous run. Cleaning up to prevent data corruption.
+Cleaned up incomplete artifacts for task debug-long-program
+Starting harness run
+Run ID: replayable-hermes-smoke-debug-long-program
+No previous results found to load
+Running task: debug-long-program
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml up -d
+Docker compose command failed with exit code 1
+Command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml up -d
+STDOUT: #1 [internal] load local bake definitions
+#1 reading from stdin 819B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 310B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for ghcr.io/laude-institute/t-bench/python-3-13:20250620
+#3 DONE 2.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/3] FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5
+#5 resolve ghcr.io/laude-institute/t-bench/python-3-13:20250620@sha256:236734f0cafcce942ca09316d57236c2273a2b5411e116454a22cf6d718d95f5 0.0s done
+#5 CACHED
+
+#6 [2/3] RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+#6 4.397 Err:1 http://deb.debian.org/debian bookworm InRelease
+#6 4.397   502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 4.692 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#6 7.214 Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#6 7.214   502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.393 Get:4 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#6 7.403 Reading package lists...
+#6 7.409 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.409 E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+#6 7.409 E: Failed to fetch http://deb.debian.org/debian-security/dists/bookworm-security/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+#6 7.409 E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.
+#6 ERROR: process "/bin/sh -c apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+------
+ > [2/3] RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*:
+4.397   502  Bad Gateway [IP: 192.168.65.254 7890]
+4.692 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+7.214 Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+7.214   502  Bad Gateway [IP: 192.168.65.254 7890]
+7.393 Get:4 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+7.403 Reading package lists...
+7.409 E: Failed to fetch http://deb.debian.org/debian/dists/bookworm/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+7.409 E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+7.409 E: Failed to fetch http://deb.debian.org/debian-security/dists/bookworm-security/InRelease  502  Bad Gateway [IP: 192.168.65.254 7890]
+7.409 E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.
+------
+
+STDERR:  Image client Pulling 
+ Image python:3.13-slim-bookworm Pulling 
+ Image client pull access denied for client, repository does not exist or may require 'docker login' 
+ d229a71b9e51 Pulling fs layer 0B
+ c90b26812a02 Pulling fs layer 0B
+ 68629629b516 Pulling fs layer 0B
+ 0e26001d5620 Pulling fs layer 0B
+ 27c12de1833b Download complete 0B
+ d229a71b9e51 Download complete 0B
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 3.146MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 3.146MB
+ 0d5cbe1c434b Downloading 1.049MB
+ 0e26001d5620 Downloading 3.146MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0e26001d5620 Download complete 0B
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 1.049MB
+ 0d5cbe1c434b Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 1.049MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 1.049MB
+ 0d5cbe1c434b Download complete 0B
+ c90b26812a02 Downloading 1.049MB
+ 68629629b516 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 2.097MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 2.097MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 3.146MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 4.194MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 5.243MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 5.243MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 5.243MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 6.291MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 6.291MB
+ c90b26812a02 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 6.291MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 8.389MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 7.34MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 9.437MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 10.49MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 8.389MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Downloading 11.53MB
+ 68629629b516 Downloading 9.437MB
+ c90b26812a02 Download complete 0B
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 9.437MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 10.49MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 11.53MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 12.58MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 13.63MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 14.68MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 15.73MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 16.78MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 17.83MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 18.87MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 19.92MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 20.97MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 22.02MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 23.07MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 24.12MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 25.17MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 26.21MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Downloading 27.26MB
+ 68629629b516 Download complete 0B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Extracting 1B
+ 68629629b516 Pull complete 0B
+ 0e26001d5620 Pull complete 0B
+ c90b26812a02 Extracting 1B
+ c90b26812a02 Extracting 1B
+ c90b26812a02 Extracting 1B
+ d229a71b9e51 Pull complete 0B
+ c90b26812a02 Pull complete 0B
+ Image python:3.13-slim-bookworm Pulled 
+ Image client Building 
+Dockerfile:4
+
+--------------------
+
+   2 |     FROM ghcr.io/laude-institute/t-bench/python-3-13:20250620
+
+   3 |     
+
+   4 | >>> RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+   5 |     
+
+   6 |     WORKDIR /app
+
+--------------------
+
+failed to solve: process "/bin/sh -c apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+
+
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml down
+Running docker compose command: docker compose -p debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program -f /root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml down --rmi all --volumes
+Harness execution failed for original-tasks/debug-long-program: Command '['docker', 'compose', '-p', 'debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program', '-f', '/root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml', 'up', '-d']' returned non-zero exit status 1.
+Traceback (most recent call last):
+  File "/root/terminal-bench_pure_linux/terminal_bench/harness/harness.py", line 1011, in _execute_single_trial
+    trial_results = self._run_trial(trial_handler)
+  File "/root/terminal-bench_pure_linux/terminal_bench/harness/harness.py", line 717, in _run_trial
+    with spin_up_terminal(
+         ~~~~~~~~~~~~~~~~^
+        client_container_name=trial_handler.client_container_name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        disable_recording=trial_handler.task.disable_asciinema,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as terminal:
+    ^
+  File "/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/terminal.py", line 176, in spin_up_terminal
+    terminal.start()
+    ~~~~~~~~~~~~~~^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/terminal.py", line 102, in start
+    self.container = self._compose_manager.start()
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/docker_compose_manager.py", line 128, in start
+    self._run_docker_compose_command(["up", "-d"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/root/terminal-bench_pure_linux/terminal_bench/terminal/docker_compose_manager.py", line 101, in _run_docker_compose_command
+    result = subprocess.run(
+        full_command,
+    ...<3 lines>...
+        text=True,
+    )
+  File "/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['docker', 'compose', '-p', 'debug-long-program-1-of-1-replayable-hermes-smoke-debug-long-program', '-f', '/root/terminal-bench_pure_linux/original-tasks/debug-long-program/docker-compose.yaml', 'up', '-d']' returned non-zero exit status 1.

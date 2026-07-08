@@ -1,0 +1,26 @@
+All three output files have been created successfully. Here's a summary:
+
+---
+
+**Task Complete: Bayesian Network from bn_sample_10k.csv**
+
+**Step 1 - DAG Recovery** → `learned_dag.csv`
+
+Used conditional independence testing (partial correlations) with the known constraint that **U has no parents**. The skeleton was recovered by testing which pairs remain dependent after conditioning on U, then removing edges that become independent. This gave exactly **6 edges**:
+
+| Edge | Parent → Child | Evidence |
+|------|---------------|----------|
+| U→Y | U → Y | Direct correlation (r=0.60) not mediated by anything |
+| U→R | U → R | Same — direct edge |
+| U→D | U → D | Same |
+| U→M | U → M | Same |
+| Y→D | Y → D | r(Y,D|U)=0.32 still significant; alphabet rule: D (earlier) is child of Y (later) |
+| R→M | R → M | r(R,M|U)=0.25 still significant; alphabet rule: M (earlier) is child of R (later) |
+
+**Step 2 - BN Fitting** → Used `LinearGaussianBayesianNetwork` with MLE, confirming the linear Gaussian CPDs.
+
+**Step 3 - Causal Intervention (do(Y=0.0))** → Edges into Y are removed. Y is fixed at 0.0, while all other CPDs remain unchanged.
+
+**Step 4 - Intervened DAG** → `intervened_dag.csv` (5 edges — U→Y removed)
+
+**Step 5 - Sampling** → `final_bn_sample.csv` (10,000 samples, same column order as original)

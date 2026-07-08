@@ -1,0 +1,63 @@
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Err:5 http://security.ubuntu.com/ubuntu jammy-security InRelease
+  502  Bad Gateway [IP: 127.0.0.1 7890]
+Ign:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Ign:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Hit:4 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+plugins: anyio-4.10.0, cov-6.2.1
+collected 2 items
+
+tests/test_outputs.py ..                                                 [100%]
+
+==================================== PASSES ====================================
+__________________________ test_maze_map_file_exists ___________________________
+----------------------------- Captured stdout call -----------------------------
+✓ Maze map file exists at maze_map.txt
+____________________________ test_maze_map_contents ____________________________
+----------------------------- Captured stdout call -----------------------------
+
+Agent's maze map:
+#####
+# #S#
+#E# #
+#   #
+#####
+
+Ground truth maze:
+#####
+# #S#
+#E# #
+#   #
+#####
+=========================== short test summary info ============================
+PASSED tests/test_outputs.py::test_maze_map_file_exists
+PASSED tests/test_outputs.py::test_maze_map_contents
+============================== 2 passed in 0.08s ===============================
+E: Failed to fetch http://security.ubuntu.com/ubuntu/dists/jammy-security/InRelease  502  Bad Gateway [IP: 127.0.0.1 7890]
+E: The repository 'http://security.ubuntu.com/ubuntu jammy-security InRelease' is no longer signed.
+curl: (35) OpenSSL SSL_connect: Connection reset by peer in connection to astral.sh:443 
+Using CPython 3.13.14
+Creating virtual environment at: .tbench-testing
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 5 packages in 13ms
+Installed 5 packages in 43ms
+ + iniconfig==2.3.0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pytest==8.4.1
+warning: `VIRTUAL_ENV=.tbench-testing` does not match the project environment path `/root/terminal-bench_pure_linux/.venv` and will be ignored; use `--active` to target the active environment instead

@@ -1,0 +1,57 @@
+import os
+import subprocess
+
+def main():
+    # 任务存放的绝对路径
+    tasks_base_path = "/root/terminal-bench_pure_linux/original-tasks"
+    # 这里列出三个最考验 AI 能力的高难度任务
+    scheduled_tasks = ["build-linux-kernel-qemu", "debug-long-program", "build-initramfs-qemu"]
+    
+    for task_name in scheduled_tasks:
+        host_task_path = os.path.join(tasks_base_path, task_name)
+        container_safe_path = f"/opt/data/{task_name}"
+        
+        print(f"\n========== 启动终极挑战 Task: {task_name} ==========")
+        
+        # 1. 拷贝与初始化
+        if not os.path.exists(host_task_path):
+            print(f"  -> 找不到任务路径 {host_task_path}，跳过...")
+            continue
+            
+        subprocess.run(["docker", "exec", "-u", "root", "hermes-agent", "rm", "-rf", container_safe_path])
+        copy_in_cmd = f"tar -cf - -C {host_task_path} . | docker exec -i hermes-agent bash -c 'mkdir -p {container_safe_path} && tar -xf - -C {container_safe_path}'"
+        subprocess.run(copy_in_cmd, shell=True)
+        
+        # 2. 赋予权限
+        subprocess.run(["docker", "exec", "-u", "root", "hermes-agent", "chown", "-R", "10000:10000", container_safe_path])
+
+        # 3. 让 AI 执行 (分配更大的 max-turns 给高难度任务)
+        print("  -> AI 正在进行深度内核与调试分析...")
+        prompt = "This task requires deep system-level debugging. Please prioritize creating a diagnostic environment first, track state changes meticulously, and verify each sub-component before proceeding."
+        # 高难度任务增加交互轮次到 120
+        cmd = ["docker", "exec", "-u", "10000:10000", "-w", container_safe_path, "hermes-agent", "hermes", "-z", prompt, "chat", "--max-turns", "120"]
+        subprocess.run(cmd)
+
+        # 4. 修复与裁判环境
+        print("  -> 在容器内运行最终裁判...")
+        fix_cmds = [
+            "git config --global --add safe.directory '*'",
+            "rm -rf .tbench-testing",
+            "sed -i 's|uv run pytest|python3 -m pytest|g' run-tests.sh",
+            "if [ -f requirements.txt ]; then pip install -r requirements.txt; fi"
+        ]
+        subprocess.run(["docker", "exec", "-u", "root", "-w", container_safe_path, "hermes-agent", "bash", "-c", " ; ".join(fix_cmds)])
+        
+        # 5. 执行裁判
+        res = subprocess.run(
+            ["docker", "exec", "-u", "10000:10000", "-w", container_safe_path, "hermes-agent", "bash", "run-tests.sh"],
+            capture_output=True, text=True
+        )
+        
+        if res.returncode == 0:
+            print(f"  -> ✅ PASS! 恭喜，你已经攻克了该数据集最难的任务之一。")
+        else:
+            print(f"  -> ❌ FAIL! 报错分析:\n{res.stdout[-1000:]}")
+
+if __name__ == "__main__":
+    main()

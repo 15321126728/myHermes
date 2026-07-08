@@ -1,4 +1,6 @@
 #!/bin/bash
+git config --global --add safe.directory "*"
+git config --global --add safe.directory "*"
 
 # Setup uv and pytest
 
@@ -7,7 +9,7 @@ apt-get update
 apt-get install -y curl
 
 # Install uv
-curl -LsSf https://astral.sh/uv/0.7.13/install.sh | sh
+echo "[TB2] Skip UV download from Github"
 
 source $HOME/.local/bin/env
 
@@ -25,4 +27,4 @@ uv pip install gitpython==3.1.44
 
 # Run pytest
 
-uv run pytest $TEST_DIR/test_outputs.py -rA
+.tbench-testing/bin/python -m pytest $TEST_DIR/test_outputs.py -rA

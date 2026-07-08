@@ -1,0 +1,84 @@
+{
+    "lockfile_version": "1.0",
+    "created_at": "2026-07-07T21:27:16.187125+08:00",
+    "invocation": {
+        "command": "main.py",
+        "args": [
+            "run",
+            "--dataset-path",
+            "original-tasks",
+            "--task-id",
+            "debug-long-program",
+            "--run-id",
+            "replayable-hermes-smoke-debug-long-program",
+            "--no-rebuild",
+            "--agent-import-path",
+            "terminal_bench.agents.replayable_hermes:ReplayableHermesAgent",
+            "--model",
+            "dummy-model",
+            "--agent-kwarg",
+            "replay_path=/tmp/replayable_hermes_smoke_replay.json",
+            "--agent-kwarg",
+            "max_episodes=1",
+            "--agent-kwarg",
+            "replay_until_episode=0",
+            "--agent-kwarg",
+            "intervention_mode=none",
+            "--agent-kwarg",
+            "trajectory_output_path=/tmp/replayable-hermes-smoke-debug-long-program.json",
+            "--n-concurrent-trials",
+            "1",
+            "--n-attempts",
+            "1",
+            "--global-agent-timeout-sec",
+            "60",
+            "--global-test-timeout-sec",
+            "60"
+        ]
+    },
+    "harness": {
+        "package": "terminal-bench",
+        "version": "0.2.18",
+        "is_editable_installation": true
+    },
+    "agent": {
+        "name": "replayable-hermes",
+        "import_path": "terminal_bench.agents.replayable_hermes:ReplayableHermesAgent",
+        "model_name": "dummy-model",
+        "extra_kwargs": {
+            "no_rebuild": true,
+            "replay_path": "/tmp/replayable_hermes_smoke_replay.json",
+            "max_episodes": 1,
+            "replay_until_episode": 0,
+            "intervention_mode": "none",
+            "trajectory_output_path": "/tmp/replayable-hermes-smoke-debug-long-program.json",
+            "model_name": "dummy-model"
+        }
+    },
+    "run_config": {
+        "log_level": "info",
+        "livestream": false,
+        "n_concurrent_trials": 1,
+        "n_attempts": 1,
+        "no_rebuild": true,
+        "cleanup": true,
+        "global_timeout_multiplier": 1.0,
+        "global_agent_timeout_sec": 60.0,
+        "global_test_timeout_sec": 60.0
+    },
+    "dataset": {
+        "name": null,
+        "version": null,
+        "local_path": "/root/terminal-bench_pure_linux/original-tasks",
+        "task_ids": [
+            "debug-long-program"
+        ],
+        "registry_url": null,
+        "local_registry_path": null
+    },
+    "local_config": {
+        "output_path": "runs",
+        "run_id": "replayable-hermes-smoke-debug-long-program",
+        "upload_results": false
+    }
+}

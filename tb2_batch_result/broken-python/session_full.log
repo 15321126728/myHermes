@@ -1,0 +1,16 @@
+## Summary
+
+**Task:** Fix broken system Python pip installation
+
+**Root cause:** Two problems conspired:
+1. Pip, setuptools, and wheel were intentionally removed from the system site-packages (`/usr/local/lib/python3.13/site-packages/`) — as designed by the Dockerfile in the task.
+2. The PEP 668 `EXTERNALLY-MANAGED` marker file (`/usr/lib/python3.13/EXTERNALLY-MANAGED`) blocked any pip operation system-wide with the "externally-managed-environment" error. This is the Debian/Ubuntu default.
+
+**What was done:**
+1. Downloaded `get-pip.py` from `https://bootstrap.pypa.io/get-pip.py`
+2. Ran `pip config set global.break-system-packages true` — this writes to `~/.config/pip/pip.conf` and tells pip to ignore the PEP 668 marker, effectively bypassing the externally-managed-environment check without needing root access to delete the marker file.
+3. Verified pip can install packages (e.g., `six`, `pytest`) to the user-level `~/.local/` site-packages.
+
+**Test results:** Both tests pass:
+- `test_pip_installed` ✓ — pip module is importable in a virtual environment
+- `test_pip_install` ✓ — pip can install packages (verified with `six`)

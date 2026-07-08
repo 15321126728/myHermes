@@ -1,0 +1,15 @@
+Task complete. Here's a summary of what was done:
+
+**Steps executed:**
+
+1. **Computed passcode** — Filtered `tablet.csv` rows where `timestamp % 7 == 0`, looked up each glyph's symbol value (from `symbols.json`) and weight (from `glyph_weights.json`), multiplied and summed them, then took `sum % 100000` = **00819** ✓
+
+2. **Extracted sealed incantation** — Used `pyzipper` (installed via `uv`) to extract the password-protected `final_clue.zip` — Python's built-in `zipfile` doesn't support PKWARE implode compression (type 99). The incantation was: **`ECHOES-OF-CYPRESS`** ✓
+
+3. **Started decryptor server** — Since Docker wasn't available, installed Flask and started `decryptor_server.py` locally on port 8090. Patched the output path from `/app/results.txt` → `/opt/data/ancient-puzzle/results.txt` (since `/app/` is only available in the Docker container), then restored the original file afterward. ✓
+
+4. **Sent incantation** — POST'd `{"incantation": "ECHOES-OF-CYPRESS"}` to `http://localhost:8090/decrypt`. Server responded: *"The ancient mechanism recognizes your incantation. The message has been revealed."* ✓
+
+5. **Final result** — Written to `/opt/data/ancient-puzzle/results.txt`:
+
+> **What is etched, endures.**

@@ -1,0 +1,21 @@
+Persistence of Vision Raytracer POV-Ray 2.0 Catalog file.   
+
+Here are the contents of the POVSCN archive.
+It contains sub-directories full of sample scene files for use
+with POV-Ray 2.0.
+
+Note that the standard include files and simpler demo files
+are now included in the POVDOC archive.
+
+Each directory has a .CAT file describing the files it contains.  
+
+POVSCN.CAT          This catalog file.
+POVLEGAL.DOC        Important legal information
+POVINF.DOC          Where to obtaing POV-Ray files
+WHATSNEW.DOC        New feature list
+
+LEVEL1\*.*          Beginner level sample scenes
+LEVEL2\*.*          Intermediate level sample scenes
+LEVEL3\*.*          Advanced level sample scenes
+MATH\*.*            Complicated quartic, cubic & poly demos
+

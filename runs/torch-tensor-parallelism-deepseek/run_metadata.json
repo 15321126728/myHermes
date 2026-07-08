@@ -1,0 +1,30 @@
+{
+    "run_id": "torch-tensor-parallelism-deepseek",
+    "uuid": "06e5a3f4-c669-4f4a-b84a-aa8d66d63d50",
+    "dataset_path": "/root/terminal-bench_pure_linux/original-tasks",
+    "dataset_name": null,
+    "dataset_version": null,
+    "output_path": "/root/terminal-bench_pure_linux/runs",
+    "agent_name": "replayable-hermes",
+    "no_rebuild": false,
+    "cleanup": true,
+    "log_level": 20,
+    "task_ids": [
+        "torch-tensor-parallelism"
+    ],
+    "exclude_task_ids": null,
+    "n_tasks": null,
+    "n_concurrent_trials": 1,
+    "n_attempts": 1,
+    "dataset_size": 1,
+    "accuracy": 0.0,
+    "model_name": "deepseek/deepseek-chat",
+    "start_time": "2026-07-07T13:45:04.548742+00:00",
+    "end_time": "2026-07-07T13:52:07.932422+00:00",
+    "commit_hash": "1a6ffa9674b571da0ed040c470cb40c4d85f9b9b",
+    "username": "root",
+    "s3_bucket": null,
+    "agent_kwargs": null,
+    "pass_at_k": {},
+    "resumed_at": null
+}

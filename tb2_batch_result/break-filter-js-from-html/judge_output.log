@@ -1,0 +1,85 @@
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.25).
+0 upgraded, 0 newly installed, 0 to remove and 45 not upgraded.
+[TB2] Skip UV download from Github
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.4.1, pluggy-1.6.0
+rootdir: /root/terminal-bench_pure_linux
+configfile: pyproject.toml
+collected 1 item
+
+tests/test_outputs.py F                                                  [100%]
+
+=================================== FAILURES ===================================
+________________________ test_out_html_bypasses_filter _________________________
+
+    def test_out_html_bypasses_filter():
+        """Test that out.html still triggers an alert after being filtered."""
+        import subprocess
+    
+        out_path = Path("./out.html")
+    
+        # First check the file exists
+        assert out_path.exists(), f"File {out_path} does not exist"
+    
+        # Create a temporary copy of the file to filter
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".html", delete=False) as f:
+            # Copy the original content to temp file
+            f.write(out_path.read_text())
+            filtered_path = Path(f.name)
+    
+        # Apply the filter using command-line interface (modifies file in-place)
+        result = subprocess.run(
+            ["python", "/tests/filter.py", str(filtered_path)],
+            capture_output=True,
+            text=True,
+        )
+    
+        # Check if filter ran successfully
+>       assert result.returncode == 0, f"Filter failed with error: {result.stderr}"
+E       AssertionError: Filter failed with error: python: can't open file '/tests/filter.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['python', '/tests/filter.py', '/tmp/tmpghzoahn7.html'], returncode=2, stdout='', stderr="python: can't open file '/tests/filter.py': [Errno 2] No such file or directory\n").returncode
+
+tests/test_outputs.py:41: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_outputs.py::test_out_html_bypasses_filter - AssertionError:...
+============================== 1 failed in 0.37s ===============================
+Using CPython 3.13.14
+Creating virtual environment with seed packages at: .tbench-testing
+ + pip==26.1.2
+Activate with: source .tbench-testing/bin/activate
+Using Python 3.13.14 environment at: .tbench-testing
+Resolved 22 packages in 120ms
+Installed 22 packages in 60ms
+ + attrs==26.1.0
+ + beautifulsoup4==4.13.5
+ + certifi==2026.6.17
+ + h11==0.16.0
+ + idna==3.18
+ + iniconfig==2.3.0
+ + outcome==1.3.0.post0
+ + packaging==26.2
+ + pluggy==1.6.0
+ + pygments==2.20.0
+ + pysocks==1.7.1
+ + pytest==8.4.1
+ + selenium==4.35.0
+ + sniffio==1.3.1
+ + sortedcontainers==2.4.0
+ + soupsieve==2.8.4
+ + trio==0.30.0
+ + trio-websocket==0.12.2
+ + typing-extensions==4.14.1
+ + urllib3==2.7.0
+ + websocket-client==1.8.0
+ + wsproto==1.3.2

@@ -1,0 +1,40 @@
+## Final Summary
+
+The task is ready. Here's what was verified and configured in `/home/hermes/workspace/original-tasks/acl-permissions-inheritance/`:
+
+### Solution Overview
+
+The **solution.sh** script implements all requirements for setting up a shared directory with Linux ACL permission inheritance. Here's what it does:
+
+**Step 1 — Directory creation and basic permissions**
+- Creates `/srv/shared`
+- Sets group ownership to `research`
+- Applies permissions `2770` (setgid bit + `rwxrws---`), ensuring new files/dirs inherit the `research` group
+
+**Step 2 — Current ACLs**
+| Entity | Permission |
+|---|---|
+| Group `research` | `rwx` |
+| User `alice` | `rwx` |
+| User `bob` | `rwx` |
+| Others | `---` (denied) |
+
+**Step 3 — Default ACLs (inheritance)**
+| Entity | Default Permission |
+|---|---|
+| Owner (`u::`) | `rwx` |
+| Group owner (`g::`) | `rwx` |
+| Group `research` | `rwx` |
+| User `alice` | `rwx` |
+| User `bob` | `rwx` |
+| Mask | `rwx` |
+| Others | `---` |
+
+### Design Guarantees
+- **Alice & Bob interop**: Both users have full `rwx` access to files/dirs created by either user
+- **Subdirectory inheritance**: Default ACLs propagate to new subdirectories and files
+- **Outside exclusion**: Users not in the `research` group (e.g., `mallory`) get `---` and are denied access
+- **Group inheritance**: The setgid bit ensures new files inherit the `research` group
+
+### Environment Note
+This task is designed to run inside a Docker sandbox (defined by the task's `Dockerfile`), which creates users `alice`, `bob`, and group `research` during image build. The solution script requires root privileges to execute — the current runtime environment runs as UID 10000 (`hermes`) without escalation capability, so the solution.sh is validated for correctness rather than executed here. In evaluation, the batch runner calls `docker exec -u root` to execute the agent inside the properly provisioned sandbox.

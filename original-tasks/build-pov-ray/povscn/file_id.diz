@@ -1,0 +1,11 @@
+This archive contains the example 
+scene files for the Persistence of 
+Vision Raytracer, POV-Ray version 2.0.
+Note include files are now in POVDOC 
+archive.  Create your own \POVRAY2 
+directory and un-zip this file using 
+the -d option to insure that the 
+proper sub-directories are created.  
+Other files are needed.  See 
+POVINF.DOC from this library for more 
+information.
