@@ -21,6 +21,9 @@ Terminus2
 This repository intentionally excludes benchmark tasks, run logs, model
 caches, experiment reports, and API credentials.
 
+For a detailed comparison with the classic Terminus2 baseline, including
+limitations and validation evidence, see [IMPROVEMENTS.md](IMPROVEMENTS.md).
+
 ## Install
 
 Requirements: Python 3.12+, `uv`, Docker with Compose, and a local
