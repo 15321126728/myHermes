@@ -1,0 +1,32 @@
+[project]
+name = "terminal-bench-hermes-agent"
+version = "0.1.0"
+description = "Replayable and intervention-guided Hermes agents for Terminal-Bench"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [{ name = "15321126728" }]
+dependencies = ["terminal-bench==0.2.18"]
+
+[project.scripts]
+hermes-agent = "hermes_agent.runner:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3.4", "ruff>=0.12.0"]
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hermes_agent"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
