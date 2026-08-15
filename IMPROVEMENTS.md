@@ -74,21 +74,22 @@ Relevant code:
 ## 3. Process-guided recovery
 
 `GuidedInterventionAgent` and `ProcessGuidanceEngine` move beyond fixed answer
-hints. They classify failures at the process level:
+hints. The implemented mechanism matrix is:
 
-- cognitive misunderstanding;
-- tool or environment failure;
-- execution and lifecycle failure;
-- observability and validation failure;
-- recoverable versus irrecoverable state.
+| Mechanism | Runtime behavior |
+| --- | --- |
+| Five cognitive errors | Detects task misunderstanding, wrong tool choice, format misunderstanding, premature success, and multi-episode analysis paralysis from commands, terminal output, and the model response |
+| Seven diagnosis layers | Locates signals in execution, tool, context, lifecycle, observability, validation, and governance layers |
+| Ternary feedback | Emits `CORRECT`, `RECOVERABLE`, or `IRRECOVERABLE`; one irrecoverable trajectory can be re-grounded with stale chat history removed |
+| Adaptive episodes | Extends only at the current budget boundary when at least three recent episodes contain measured productive progress; analysis loops do not extend and extensions are capped |
+| Runtime verification | Extracts declared output artifacts and checks them inside the container after every episode with a non-empty-file gate; missing artifacts block completion |
+| Knowledge supply | Announces a real container knowledge document before the first live turn and repeats the hint only when knowledge-gap language is detected |
+| Comprehension check | Asks task-specific or contract-derived questions before the first live turn and deterministically checks required answer keywords |
 
-The ternary feedback policy uses `CORRECT`, `RECOVERABLE`, and `IRRECOVERABLE`
-states. It can inject a targeted process hint, break an analysis loop, or extend
-the episode budget when progress remains recoverable.
-
-Optional knowledge hints and comprehension checks are also available. These
-features require task-specific configuration and should not be interpreted as a
-generic improvement on every benchmark task.
+The CLI passes the selected task ID and actual episode budget into the guided
+agent automatically. Three bundled benchmark tasks expose known knowledge-file
+locations; other datasets can use `--knowledge-file` explicitly. The agent
+checks that the document exists and is non-empty before mentioning it.
 
 Relevant code:
 
@@ -168,7 +169,8 @@ The current release has the following verified evidence:
 
 - clean installation against the published `terminal-bench==0.2.18` package;
 - Ruff static checks pass;
-- package tests pass (`6 passed`);
+- package tests pass (`16 passed`), including direct tests for all seven guidance
+  mechanisms and CLI wiring;
 - source distribution and wheel build successfully;
 - a real Docker-backed `hello-world` run completed with `1/1` resolved and
   `100%` accuracy using the extracted package.

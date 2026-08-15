@@ -21,7 +21,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-path", type=Path, required=True)
     parser.add_argument("--task", required=True)
-    parser.add_argument("--agent", choices=sorted(AGENTS), default="replayable-hermes")
+    parser.add_argument(
+        "--agent", choices=sorted(AGENTS), default="guided-intervention"
+    )
     parser.add_argument(
         "--model", default=os.environ.get("TB_MODEL_NAME", "deepseek/deepseek-chat")
     )
@@ -35,6 +37,12 @@ def main() -> None:
     parser.add_argument("--replay-path", type=Path)
     parser.add_argument("--replay-until", type=int, default=0)
     parser.add_argument("--intervention")
+    parser.add_argument(
+        "--knowledge-file",
+        help="Optional path to a domain knowledge document inside the task container",
+    )
+    parser.add_argument("--no-comprehension-check", action="store_true")
+    parser.add_argument("--no-process-guidance", action="store_true")
     parser.add_argument("--no-rebuild", action="store_true")
     args = parser.parse_args()
 
@@ -73,6 +81,15 @@ def main() -> None:
             intervention_mode="inject",
             intervention_payload=args.intervention,
         )
+    if args.agent == "guided-intervention":
+        agent_kwargs.update(
+            guidance_task_id=args.task,
+            guidance_base_max=args.max_episodes,
+            enable_process_guidance=not args.no_process_guidance,
+            enable_comprehension_check=not args.no_comprehension_check,
+        )
+        if args.knowledge_file:
+            agent_kwargs["knowledge_file"] = args.knowledge_file
 
     results = Harness(
         output_path=output_path,

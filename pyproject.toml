@@ -21,6 +21,15 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/hermes_agent"]
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.env",
+  "/.venv",
+  "/build-artifacts",
+  "/dist",
+  "/runs",
+]
+
 [tool.ruff]
 line-length = 88
 target-version = "py312"

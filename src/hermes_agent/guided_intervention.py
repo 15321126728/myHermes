@@ -16,8 +16,10 @@ GuidedInterventionAgent — 基于「过程引导」而非「答案泄漏」的�
 
 from __future__ import annotations
 
+import itertools
 import json
 import re
+import shlex
 from pathlib import Path
 from typing import Any
 
@@ -27,8 +29,10 @@ from terminal_bench.terminal.tmux_session import TmuxSession
 from hermes_agent.intervened_terminus import IntervenedTerminusAgent
 from hermes_agent.process_guidance import (
     ProcessGuidanceEngine,
+    TernaryFeedback,
 )
 from hermes_agent.replay_support import default_artifact_path
+from hermes_agent.task_contract import TaskContract
 
 
 class GuidedInterventionAgent(IntervenedTerminusAgent):
@@ -62,11 +66,16 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         # --- 过程引导参数 ---
         enable_process_guidance: bool = True,  # 启用过程引导（默认开）
         guidance_task_id: str = "",  # 任务 ID（用于领域特定引导）
-        guidance_base_max: int = 25,  # 基础 episode 上限
+        guidance_base_max: int | None = None,  # 默认与实际运行上限一致
         # --- 知识提示参数 ---
-        knowledge_file: str = "/app/KNOWLEDGE.md",  # 领域知识文档（容器内路径）
+        knowledge_file: str | None = None,  # 容器内路径；未设置时按任务自动发现
         **kwargs: Any,
     ):
+        knowledge_max_hints = int(kwargs.pop("knowledge_max_hints", 3))
+        enable_comprehension_check = bool(
+            kwargs.pop("enable_comprehension_check", True)
+        )
+        max_trajectory_resets = int(kwargs.pop("max_trajectory_resets", 1))
         super().__init__(
             model_name=model_name,
             max_episodes=max_episodes,
@@ -93,28 +102,38 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         if enable_process_guidance:
             self._guidance_engine = ProcessGuidanceEngine(
                 task_id=guidance_task_id,
-                base_max_episodes=guidance_base_max or (max_episodes or 25),
+                base_max_episodes=guidance_base_max or self._max_episodes,
             )
 
         self._guidance_task_id = guidance_task_id
 
         # 知识提示状态
-        self._knowledge_file = knowledge_file
+        task_knowledge_files = {
+            "dna-assembly": "/app/KNOWLEDGE_GOLDEN_GATE.md",
+            "feal-differential-cryptanalysis": "/app/KNOWLEDGE_FEAL.md",
+            "protein-assembly": "/app/KNOWLEDGE_FUSION.md",
+        }
+        self._knowledge_file = knowledge_file or task_knowledge_files.get(
+            guidance_task_id
+        )
+        self._knowledge_available: bool | None = None
         self._knowledge_hint_sent: bool = False
         self._knowledge_hint_count: int = 0
-        self._knowledge_max_hints: int = kwargs.pop("knowledge_max_hints", 3)
+        self._knowledge_max_hints = max(0, knowledge_max_hints)
 
         # 任务理解校验状态
-        self._comprehension_enabled: bool = kwargs.pop(
-            "enable_comprehension_check", True
-        )
+        self._comprehension_enabled = enable_comprehension_check
         self._comprehension_sent: bool = False  # 是否已向 agent 提问
         self._comprehension_checked: bool = False  # 是否已检查 agent 的回答
         self._comprehension_episode: int = 0  # 提问所在的 episode
+        self._active_comprehension_questions: list[dict[str, Any]] = []
+        self._trajectory_reset_count = 0
+        self._max_trajectory_resets = max(0, max_trajectory_resets)
 
         # 运行验证器收集状态（轻量级，不依赖 Docker）
         self._has_output_file: bool = False
         self._output_file_path: str = ""
+        self._artifact_requirement_detected = False
 
         self._logger.info(
             f"GuidedInterventionAgent initialized: "
@@ -127,8 +146,41 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
     # 领域特定的输出文件检测
     # ──────────────────────────────────────────────
 
-    def _check_output_file(self, terminal_output: str, session: TmuxSession) -> bool:
-        """检测 agent 是否已生成目标输出文件。"""
+    @staticmethod
+    def _container_file_nonempty(session: TmuxSession, path: str) -> bool:
+        try:
+            result = session.container.exec_run(
+                ["bash", "-lc", f"test -s {shlex.quote(path)}"]
+            )
+            return result.exit_code == 0
+        except Exception:
+            return False
+
+    def _check_output_file(
+        self,
+        terminal_output: str,
+        session: TmuxSession,
+        instruction: str = "",
+    ) -> bool:
+        """在容器内验证任务声明的输出产物存在且非空。"""
+        contract = TaskContract.from_instruction(instruction) if instruction else None
+        if contract and (contract.output_paths or contract.optional_output_groups):
+            self._artifact_requirement_detected = True
+            required_ready = all(
+                self._container_file_nonempty(session, path)
+                for path in contract.output_paths
+            )
+            optional_ready = all(
+                any(self._container_file_nonempty(session, path) for path in group)
+                for group in contract.optional_output_groups
+            )
+            if required_ready and optional_ready:
+                paths = list(contract.output_paths)
+                paths.extend(group[0] for group in contract.optional_output_groups)
+                self._output_file_path = ", ".join(paths)
+                return True
+            return False
+
         output_triggers = {
             "constraints-scheduling": [
                 "meeting_scheduled.ics",
@@ -143,43 +195,39 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         }
 
         triggers = output_triggers.get(self._guidance_task_id, [])
-        for trigger in triggers:
-            if trigger in terminal_output:
-                return True
+        absolute_triggers = [
+            trigger if trigger.startswith("/app/") else f"/app/{trigger}"
+            for trigger in triggers
+        ]
+        if absolute_triggers:
+            self._artifact_requirement_detected = True
+            for trigger in dict.fromkeys(absolute_triggers):
+                if self._container_file_nonempty(session, trigger):
+                    self._output_file_path = trigger
+                    return True
+            return False
 
-        # 兜底：从终端输出中识别普遍的文件名，避免只盯死编码文件名
+        # 无任务契约时，只把终端文本用于发现候选路径，最终仍以容器为准。
         file_candidates = re.findall(
             r"(?<!/)\b[A-Za-z0-9_.-]+\.(?:py|txt|json|csv|ics|parquet|fasta|fa|fna)\b",
             terminal_output,
         )
         for candidate in file_candidates:
             possible_path = f"/app/{candidate}"
-            try:
-                result = session.container.exec_run(
-                    ["bash", "-lc", f"test -f '{possible_path}' && echo EXISTS || true"]
-                )
-                output = result.output.decode(errors="replace").strip()
-                if "EXISTS" in output:
-                    self._output_file_path = possible_path
-                    return True
-            except Exception:
-                pass
-
-        # 尝试在容器内检查已知 trigger
-        try:
-            for trigger in triggers:
-                if trigger.startswith("/app/"):
-                    result = session.container.exec_run(
-                        ["bash", "-c", f"test -f {trigger} && echo 'EXISTS' || true"]
-                    )
-                    output = result.output.decode(errors="replace").strip()
-                    if "EXISTS" in output:
-                        self._output_file_path = trigger
-                        return True
-        except Exception:
-            pass
+            if self._container_file_nonempty(session, possible_path):
+                self._output_file_path = possible_path
+                return True
 
         return False
+
+    def _knowledge_file_exists(self, session: TmuxSession) -> bool:
+        if not self._knowledge_file:
+            return False
+        if self._knowledge_available is None:
+            self._knowledge_available = self._container_file_nonempty(
+                session, self._knowledge_file
+            )
+        return self._knowledge_available
 
     # ──────────────────────────────────────────────
     # 知识提示：AI 缺少领域知识时提示阅读知识文档
@@ -192,7 +240,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
 
         设计原则：
         - 知识文档只提供「领域概念 + 方法」，不包含答案（避免答案泄漏）
-        - Ep0 主动告知知识文档的存在
+        - 第一个实时 episode 主动告知知识文档的存在
         - 后续 episode 仅在检测到「知识缺失信号」（疑惑、不确定、请求解释等）时提醒
         - 最多注入 knowledge_max_hints 次，避免过度干扰
 
@@ -201,8 +249,8 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         if not self._knowledge_file:
             return ""
 
-        # ── Ep0：主动告知知识文档存在 ──
-        if episode == 0 and not self._knowledge_hint_sent:
+        # ── 首个实时 episode：主动告知知识文档存在 ──
+        if not self._knowledge_hint_sent:
             self._knowledge_hint_sent = True
             self._knowledge_hint_count += 1
             self._trajectory_records.append(
@@ -262,7 +310,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         return ""
 
     def _knowledge_intro_hint(self) -> str:
-        """Ep0 的知识文档介绍提示（不含答案，只告知存在与方法提示）。"""
+        """首次知识文档介绍提示（不含答案，只告知存在与方法提示）。"""
         return (
             "\n\n[Knowledge Hint] This task may require specialized domain knowledge "
             "that is not obvious from the task description alone. A knowledge reference "
@@ -470,9 +518,57 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         ],
     }
 
-    def _build_comprehension_prompt(self) -> str:
+    def _build_comprehension_prompt(self, instruction: str = "") -> str:
         """构造 Ep0 的理解校验问题文本。"""
-        questions = self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, [])
+        questions = list(
+            self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, [])
+        )
+        if not questions and instruction:
+            contract = TaskContract.from_instruction(instruction)
+            if contract.output_paths:
+                questions.append(
+                    {
+                        "question": "任务要求生成哪些最终输出文件？",
+                        "expect": list(contract.output_paths),
+                        "min_matches": len(contract.output_paths),
+                        "hint": "请重新核对任务中明确声明的最终输出路径。",
+                    }
+                )
+            requirement_text = " ".join(contract.requirements[:3]).lower()
+            stopwords = {
+                "about",
+                "after",
+                "before",
+                "create",
+                "file",
+                "from",
+                "into",
+                "output",
+                "should",
+                "task",
+                "that",
+                "then",
+                "this",
+                "using",
+                "with",
+            }
+            keywords = list(
+                dict.fromkeys(
+                    word
+                    for word in re.findall(r"[a-z0-9_.-]{4,}", requirement_text)
+                    if word not in stopwords and not word.startswith("/app/")
+                )
+            )[:6]
+            if keywords:
+                questions.append(
+                    {
+                        "question": "请概括核心目标和至少两个关键约束。",
+                        "expect": keywords,
+                        "min_matches": min(2, len(keywords)),
+                        "hint": "请重新阅读目标、输入、输出及限制条件后再开始。",
+                    }
+                )
+        self._active_comprehension_questions = questions
         if not questions:
             return ""
         lines = [
@@ -500,7 +596,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
             failed_items: 未通过的问题列表（含 question/hint）
             feedback_text: 若存在误解，注入的纠正提示文本（空串表示理解正确）
         """
-        questions = self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, [])
+        questions = self._active_comprehension_questions
         if not questions:
             return [], ""
 
@@ -510,7 +606,11 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         failed: list[dict[str, Any]] = []
         for q in questions:
             expect = q.get("expect", [])
-            passed = any(re.search(re.escape(exp), combined_lower) for exp in expect)
+            match_count = sum(
+                bool(re.search(re.escape(str(exp).lower()), combined_lower))
+                for exp in expect
+            )
+            passed = match_count >= int(q.get("min_matches", 1))
             if not passed:
                 failed.append(q)
 
@@ -555,7 +655,9 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         replay_cutoff = self._replay_until_episode
 
         try:
-            for episode in range(self._max_episodes):
+            for episode in itertools.count():
+                if episode >= self._max_episodes:
+                    break
                 if not session.is_session_alive():
                     self._logger.info("Session has ended, breaking out of agent loop")
                     break
@@ -605,21 +707,33 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                     # ── 时刻表干预 ──
                     self._apply_schedule_interventions(episode, chat)
 
+                    # ── 首个实时 episode：仅在文档真实存在时提示 ──
+                    if (
+                        self._knowledge_file_exists(session)
+                        and not self._knowledge_hint_sent
+                    ):
+                        prompt = (
+                            f"{self._maybe_inject_knowledge_hint(episode, '', '')}"
+                            f"\n\n{prompt}"
+                        )
+
                     # ── ★ 任务理解校验：Ep0 向 agent 提问关键约束 ──
                     if (
                         not replay_mode
                         and self._comprehension_enabled
                         and not self._comprehension_sent
-                        and self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id)
                     ):
-                        comp_prompt = self._build_comprehension_prompt()
+                        comp_prompt = self._build_comprehension_prompt(
+                            original_instruction
+                        )
                         if comp_prompt:
                             # 把问题放在当前 prompt 最前面，要求先回答再执行
                             prompt = f"{comp_prompt}\n\n{prompt}"
                             self._comprehension_sent = True
                             self._comprehension_episode = episode
                             self._logger.info(
-                                f"[理解校验] Episode {episode}: 注入 {len(self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, []))} 个理解问题"
+                                f"[理解校验] Episode {episode}: 注入 "
+                                f"{len(self._active_comprehension_questions)} 个理解问题"
                             )
                             self._trajectory_records.append(
                                 {
@@ -685,6 +799,29 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                 # ── 执行命令 ──
                 _, terminal_output = self._execute_commands(commands, session)
 
+                # 每轮都从容器验证声明的输出产物，而不是等待最终测试。
+                if not replay_mode:
+                    self._has_output_file = self._check_output_file(
+                        terminal_output, session, original_instruction
+                    )
+
+                # 理解回答必须在接受完成声明之前通过机器检查。
+                comprehension_feedback = ""
+                if (
+                    not replay_mode
+                    and self._comprehension_enabled
+                    and self._comprehension_sent
+                    and not self._comprehension_checked
+                ):
+                    _, comprehension_feedback = self._check_comprehension(
+                        response, terminal_output
+                    )
+                    self._comprehension_checked = True
+                    if comprehension_feedback:
+                        self._logger.info(
+                            f"[理解校验] Episode {episode}: 检测到任务误解"
+                        )
+
                 # ── Episode 快照 ──
                 if self._enable_episode_snapshots and not replay_mode:
                     self._capture_episode_snapshot(
@@ -728,6 +865,35 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
 
                 # ── 任务完成检查 ──
                 if is_task_complete:
+                    if comprehension_feedback:
+                        self._pending_completion = False
+                        prompt = comprehension_feedback
+                        self._trajectory_records.append(
+                            {
+                                "episode": episode,
+                                "task_complete": False,
+                                "completion_rejected": True,
+                                "reason": "comprehension_check_failed",
+                            }
+                        )
+                        continue
+                    if self._artifact_requirement_detected and not self._has_output_file:
+                        self._pending_completion = False
+                        prompt = (
+                            "Completion was rejected by the runtime verifier: one or "
+                            "more declared output artifacts are missing or empty. "
+                            "Create and validate every required artifact before trying "
+                            "again.\n\n"
+                            f"{self._limit_output_length(terminal_output)}"
+                        )
+                        self._trajectory_records.append(
+                            {
+                                "episode": episode,
+                                "task_complete": False,
+                                "completion_rejected": True,
+                            }
+                        )
+                        continue
                     if self._pending_completion:
                         self._trajectory_records.append(
                             {"episode": episode, "task_complete": True}
@@ -753,11 +919,6 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                     and self._enable_process_guidance
                     and self._guidance_engine
                 ):
-                    # 检测输出文件
-                    self._has_output_file = self._check_output_file(
-                        terminal_output, session
-                    )
-
                     # 分析命令文本
                     cmd_texts = [
                         c.keystrokes.strip()
@@ -776,6 +937,10 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                         total_episodes=self._max_episodes,
                         is_analysis_loop=is_loop,
                         has_output_file=self._has_output_file,
+                        is_productive=any(
+                            self._is_productive_command(text) for text in cmd_texts
+                        ),
+                        agent_response=response,
                     )
                     extra_feedback = f"\n\n{guidance}"
 
@@ -789,43 +954,57 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                     )
 
                     # 检查是否需要自适应延长
-                    if self._guidance_engine.episode_manager.should_extend(episode):
-                        new_max = (
-                            self._guidance_engine.episode_manager.get_max_episodes(
-                                episode
-                            )
-                        )
+                    manager = self._guidance_engine.episode_manager
+                    if manager.should_extend(episode, self._max_episodes):
+                        new_max = manager.extend_limit(episode, self._max_episodes)
                         self._logger.info(
                             f"[自适应延长] Episode {episode}: 上限从 {self._max_episodes} 延长至 {new_max}"
                         )
                         self._max_episodes = new_max
+                        extra_feedback += (
+                            f"\n\n[Adaptive Budget] Productive progress was detected; "
+                            f"the episode limit is now {new_max}."
+                        )
+
+                    if (
+                        TernaryFeedback.is_irrecoverable(
+                            self._guidance_engine.last_feedback_level
+                        )
+                        and self._trajectory_reset_count < self._max_trajectory_resets
+                    ):
+                        self._trajectory_reset_count += 1
+                        chat._messages = [
+                            message
+                            for message in chat._messages
+                            if message.get("role") == "system"
+                        ]
+                        extra_feedback = (
+                            "\n\n[Trajectory Reset] The previous approach became "
+                            "irrecoverable. Re-ground on the original task and choose a "
+                            "different method. Existing files remain available.\n\n"
+                            f"{initial_prompt}\n\n{guidance}"
+                        )
+                        self._trajectory_records.append(
+                            {
+                                "episode": episode,
+                                "intervention_type": "trajectory_reset",
+                                "feedback_level": self._guidance_engine.last_feedback_level,
+                            }
+                        )
 
                 # ── ★ 知识提示：AI 缺少领域知识时提示阅读知识文档 ──
                 knowledge_hint = ""
-                if not replay_mode and self._knowledge_file:
+                if (
+                    not replay_mode
+                    and self._knowledge_file_exists(session)
+                    and self._knowledge_hint_sent
+                ):
                     knowledge_hint = self._maybe_inject_knowledge_hint(
                         episode, response, terminal_output
                     )
                     if knowledge_hint:
                         self._logger.info(
                             f"[知识提示] Episode {episode}: 注入知识提示（共 {self._knowledge_hint_count} 次）"
-                        )
-
-                # ── ★ 任务理解校验：检查 agent 对 Ep0 问题的回答 ──
-                comprehension_feedback = ""
-                if (
-                    not replay_mode
-                    and self._comprehension_enabled
-                    and self._comprehension_sent
-                    and not self._comprehension_checked
-                ):
-                    _, comprehension_feedback = self._check_comprehension(
-                        response, terminal_output
-                    )
-                    self._comprehension_checked = True
-                    if comprehension_feedback:
-                        self._logger.info(
-                            f"[理解校验] Episode {episode}: 检测到任务误解，注入纠正提示"
                         )
 
                 # ── 构建下一轮 prompt ──
@@ -889,39 +1068,53 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         """判断命令是否属于生产性操作（写文件、编译、运行脚本等）。"""
         cmd = cmd_text.strip().lower()
 
-        # 写文件操作（包括 heredoc）
-        if any(
-            cmd.startswith(p) for p in ["cat >", "cat>>", "echo >", "echo>>", "printf"]
+        # 通用写入和编辑操作。
+        if re.search(r"(^|[^2])>{1,2}\s*[^&]", cmd):
+            return True
+        if cmd.startswith(
+            (
+                "tee ",
+                "touch ",
+                "sed -i",
+                "perl -pi",
+                "patch ",
+                "git apply ",
+                "chmod ",
+                "chown ",
+            )
         ):
-            if ">" in cmd or "<<" in cmd:
-                return True
+            return True
 
-        # Python 脚本执行（包含写文件逻辑的）
+        # Python 写入或脚本执行；纯读取的一次性探针不算生产性进展。
         if cmd.startswith("python3") or cmd.startswith("python "):
-            if any(
-                kw in cmd
-                for kw in [
-                    "primers.fasta",
-                    '".fasta"',
-                    "'.fasta'",
-                    ".write(",
-                    'open("',
-                    "open('",
-                    "meeting_scheduled.ics",
-                    "/app/",
-                    "gblock.txt",
-                    "attack.py",
-                    "parallel_linear.py",
-                ]
-            ):
+            write_signals = (
+                ".write(",
+                ".write_text(",
+                ".write_bytes(",
+                ".to_csv(",
+                ".to_parquet(",
+                "json.dump(",
+                "pickle.dump(",
+            )
+            opens_for_write = re.search(
+                r"open\s*\([^)]*,\s*['\"][wax+]", cmd
+            )
+            if opens_for_write or any(signal in cmd for signal in write_signals):
                 return True
+            read_signals = ("open(", ".read()", ".read_text(", "for line in")
+            is_inline = " -c " in cmd or "<<" in cmd
+            if is_inline and any(signal in cmd for signal in read_signals):
+                return False
+            return True
 
         # 测试执行
         if "run-tests" in cmd or "pytest" in cmd:
             return True
 
         # 文件复制/移动
-        if cmd.startswith(("cp ", "mv ", "install ", "make ")):
+        if cmd.startswith(
+            ("cp ", "mv ", "install ", "make ", "cmake ", "docker ")
+        ):
             return True
 
         return False
@@ -962,13 +1155,17 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                     "for line in",
                 ]
             )
-            has_write = any(
+            has_write = bool(
+                re.search(r"open\s*\([^)]*,\s*['\"][wax+]", cmd)
+            ) or any(
                 kw in cmd
-                for kw in [
+                for kw in (
                     ".write(",
-                    'open("',
-                    "open('",
-                ]
+                    ".write_text(",
+                    ".write_bytes(",
+                    ".to_csv(",
+                    ".to_parquet(",
+                )
             )
             if has_read and not has_write:
                 return True

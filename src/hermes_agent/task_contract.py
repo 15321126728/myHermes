@@ -8,6 +8,12 @@ _TITLED_RE = re.compile(
     r"(?:titled|named|called)\s+[`'\"]?([A-Za-z0-9_.-]+)[`'\"]?",
     re.IGNORECASE,
 )
+_OUTPUT_FILENAME_RE = re.compile(
+    r"(?:output(?:\s+file)?(?:\s+(?:is|must be|should be))?|"
+    r"save(?:\s+as)?|write(?:\s+to)?|create|generate)\s*[:=]?\s*"
+    r"[`'\"]?([A-Za-z0-9_.-]+\.[A-Za-z0-9]+)[`'\"]?",
+    re.IGNORECASE,
+)
 _OUTPUT_LINE_RE = re.compile(
     r"\b(output|convert|create|generate|save|write|record|implementation|solution)\b",
     re.IGNORECASE,
@@ -37,6 +43,10 @@ class TaskContract:
             if "." not in name:
                 continue
             path = f"/app/{name}"
+            if path not in paths:
+                paths.append(path)
+        for name in _OUTPUT_FILENAME_RE.findall(instruction):
+            path = f"/app/{name.rstrip('.,;:')}"
             if path not in paths:
                 paths.append(path)
 
@@ -74,6 +84,8 @@ class TaskContract:
                     name = name.rstrip(".,;:)")
                     if "." in name:
                         line_paths.append(f"/app/{name}")
+                for name in _OUTPUT_FILENAME_RE.findall(clause):
+                    line_paths.append(f"/app/{name.rstrip('.,;:')}")
                 line_paths = list(dict.fromkeys(line_paths))
                 if re.search(r"\bconvert\b", clause, re.IGNORECASE):
                     if len(line_paths) < 2 and not re.search(

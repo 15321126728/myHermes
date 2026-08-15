@@ -15,8 +15,9 @@ Terminus2
 - `ReplayableHermesAgent` records and replays model trajectories.
 - `IntervenedTerminusAgent` adds schedules, triggers, forced commands, and
   optional validation feedback.
-- `GuidedInterventionAgent` adds process guidance, cognitive-error detection,
-  and adaptive episode management.
+- `GuidedInterventionAgent` adds five-category cognitive-error detection,
+  seven-layer diagnosis, ternary feedback, runtime artifact verification,
+  adaptive episode management, knowledge hints, and comprehension checks.
 
 This repository intentionally excludes benchmark tasks, run logs, model
 caches, experiment reports, and API credentials.
@@ -51,8 +52,14 @@ export DEEPSEEK_API_KEY="your-key"
 uv run hermes-agent \
   --dataset-path /path/to/terminal-bench/original-tasks \
   --task hello-world \
-  --agent replayable-hermes
+  --agent guided-intervention
 ```
+
+`guided-intervention` is the CLI default. It automatically receives the task ID
+and episode budget, so task-specific checks are active. Use
+`--knowledge-file /app/KNOWLEDGE.md` when a task supplies a custom knowledge
+document inside its container. Knowledge hints are disabled automatically when
+that file does not exist.
 
 Use an intervention or replay an existing trajectory:
 
@@ -66,7 +73,8 @@ uv run hermes-agent \
   --replay-until 1
 ```
 
-Generated trajectories are written below `runs/<run-id>/`.
+Generated trajectories are written below `runs/<run-id>/`. Use
+`--no-process-guidance` or `--no-comprehension-check` for ablation runs.
 
 ## Development
 

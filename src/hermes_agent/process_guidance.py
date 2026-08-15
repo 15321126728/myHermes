@@ -72,6 +72,10 @@ class TernaryFeedback:
     def format(cls, level: str, message: str, guidance: str = "") -> str:
         return f"{level}\n{message}\n{guidance}"
 
+    @classmethod
+    def is_irrecoverable(cls, level: str) -> bool:
+        return level == cls.IRRECOVERABLE
+
 
 # ──────────────────────────────────────────────
 # 认知错误检测器
@@ -142,17 +146,6 @@ class CognitiveErrorDetector:
             "hint_template": "你声称任务已经完成，但输出文件似乎不完整或格式有误。请先通过 `cat` 确认输出文件的内容和格式是否符合要求，然后运行测试验证。",
         },
         {
-            "name": "analysis_paralysis",
-            "signals": [
-                r"let me (check|verify|analyze|look at|examine)",
-                r"first, (let|i need|we need) to (understand|check|examine)",
-                r"i should (check|verify|examine|analyze) (if|whether)",
-            ],
-            "layer": "lifecycle",
-            "description": "Agent 陷入分析瘫痪 — 重复分析不执行",
-            "hint_template": "你已经分析了足够的上下文。现在需要执行具体的操作来推进任务。请直接输出所需的文件内容。",
-        },
-        {
             "name": "wrong_tool_choice",
             "signals": [
                 r"apt-get install|pip install|conda install",
@@ -163,16 +156,26 @@ class CognitiveErrorDetector:
             "hint_template": "当前环境可能没有网络连接，无法安装新包。请使用环境中已预装的工具，或者仅使用 Python 标准库完成任务。",
         },
         {
-            "name": "endless_reading",
+            "name": "format_misunderstanding",
             "signals": [
-                r"cat.*\.(fasta|ics|py|txt|yaml|json|csv)",
-                r"head.*\.(fasta|ics|py)",
-                r"tail.*\.(fasta|ics|py)",
-                r"less|more|vim|nano",
+                r"(?:wrong|incorrect|invalid|unsupported).{0,30}format",
+                r"format.{0,30}(?:wrong|incorrect|invalid|unsupported)",
+                r"(?:json|xml|csv|ics|fasta|parquet).{0,30}(?:parse|syntax).{0,15}error",
             ],
-            "layer": "tool",
-            "description": "Agent 反复读取已有文件内容",
-            "hint_template": "你已经多次读取了输入文件。请基于已有信息直接推进任务，而不是继续查看文件内容。",
+            "layer": "validation",
+            "description": "Agent 对要求的输出格式理解有偏差",
+            "hint_template": "输出格式与任务约束不一致。请重新核对文件名、序列化格式、必需字段和示例结构，再修改并验证输出。",
+        },
+        {
+            "name": "analysis_paralysis",
+            "signals": [
+                r"let me (check|verify|analyze|look at|examine)",
+                r"first, (let|i need|we need) to (understand|check|examine)",
+                r"i should (check|verify|examine|analyze) (if|whether)",
+            ],
+            "layer": "lifecycle",
+            "description": "Agent 陷入分析瘫痪 — 重复分析不执行",
+            "hint_template": "你已经分析了足够的上下文。现在需要执行具体操作推进任务，并用环境反馈验证结果。",
         },
     ]
 
@@ -182,6 +185,8 @@ class CognitiveErrorDetector:
         self._command_history: list[str] = []
         self._analysis_count: int = 0
         self._read_count: int = 0
+        self._analysis_episode_streak: int = 0
+        self._reported_forbidden: set[str] = set()
 
     def analyze_episode(
         self,
@@ -190,21 +195,42 @@ class CognitiveErrorDetector:
         terminal_output: str,
         total_episodes: int,
         has_output_file: bool = False,
+        agent_response: str = "",
     ) -> list[CognitiveError]:
         """分析单 episode，返回检测到的认知错误列表。"""
         errors: list[CognitiveError] = []
         cmd_text = " ".join(commands).lower()
         output_lower = terminal_output.lower()
+        response_lower = agent_response.lower()
 
         self._command_history.extend(commands)
 
+        read_pattern = re.compile(r"^\s*(cat|head|tail|less|more|ls|find)\b")
+        analysis_pattern = re.compile(
+            r"^\s*(cat|head|tail|less|more|ls|find|pwd|which|env)\b"
+        )
+        self._read_count += sum(bool(read_pattern.search(cmd)) for cmd in commands)
+        self._analysis_count += sum(
+            bool(analysis_pattern.search(cmd)) for cmd in commands
+        )
+        all_analysis = bool(commands) and all(
+            analysis_pattern.search(cmd) for cmd in commands
+        )
+        self._analysis_episode_streak = (
+            self._analysis_episode_streak + 1 if all_analysis else 0
+        )
+
         # 合并命令文本用于模式匹配
-        combined_text = cmd_text + "\n" + output_lower
+        combined_text = cmd_text + "\n" + output_lower + "\n" + response_lower
 
         # 已生成输出文件 → 抑制"无尽读取"等过时警告
         if has_output_file:
             # 只检测关键错误（过早成功、分析瘫痪），跳过读取警告
-            allowed_patterns = ["premature_success", "analysis_paralysis"]
+            allowed_patterns = [
+                "premature_success",
+                "format_misunderstanding",
+                "analysis_paralysis",
+            ]
             for pattern in self.COGNITIVE_PATTERNS:
                 if pattern["name"] not in allowed_patterns:
                     continue
@@ -236,16 +262,34 @@ class CognitiveErrorDetector:
                         )
                         break
 
-        # 检查领域特定的缺失行为
+        if self._analysis_episode_streak >= 2 and not any(
+            error.type == "analysis_paralysis" for error in errors
+        ):
+            pattern = next(
+                item
+                for item in self.COGNITIVE_PATTERNS
+                if item["name"] == "analysis_paralysis"
+            )
+            errors.append(
+                CognitiveError(
+                    type=pattern["name"],
+                    description=pattern["description"],
+                    evidence=[
+                        f"{self._analysis_episode_streak} consecutive read-only episodes"
+                    ],
+                    layer=pattern["layer"],
+                    suggested_hint=pattern["hint_template"],
+                )
+            )
+
+        # 领域限制仍归入五类中的工具选择错误，不创造第六种认知类型。
         if self.task_signals:
             for forbidden in self.task_signals.get("forbidden_patterns", []):
-                if (
-                    forbidden in combined_text
-                    and forbidden not in self._command_history[-3:]
-                ):
+                if forbidden in combined_text and forbidden not in self._reported_forbidden:
+                    self._reported_forbidden.add(forbidden)
                     errors.append(
                         CognitiveError(
-                            type="forbidden_action",
+                            type="wrong_tool_choice",
                             description=f"Agent 试图执行禁止的操作: {forbidden}",
                             evidence=[f"found forbidden pattern: {forbidden}"],
                             layer="execution",
@@ -341,14 +385,40 @@ class LayerDiagnoser:
                 "hint": "测试失败。请检查输出文件的内容和格式，并与任务描述中的要求进行比对。",
             },
         ],
+        "observability": [
+            {
+                "pattern": r"(?:cannot|can't|unable to) (?:see|inspect|observe|verify)",
+                "hint": "当前状态不可见。请用 `pwd`、`stat`、`file` 或最小探针获取可验证的环境证据。",
+            },
+            {
+                "pattern": r"(?:assuming|probably|should have).{0,40}(?:created|worked|passed)",
+                "hint": "不要根据假设判断状态。请直接检查产物和命令退出状态。",
+            },
+        ],
+        "governance": [
+            {
+                "pattern": r"(?:ignore|bypass|skip).{0,40}(?:requirement|constraint|instruction|test)",
+                "hint": "检测到可能绕过任务约束的行为。请恢复原始要求，并逐项验证合规性。",
+            },
+            {
+                "pattern": r"(?:apt-get|pip|npm|conda) install",
+                "hint": "安装外部依赖可能违反环境约束。请先确认规则，并优先使用已有工具。",
+            },
+        ],
     }
 
     def diagnose(
-        self, episode: int, commands: list[str], terminal_output: str
+        self,
+        episode: int,
+        commands: list[str],
+        terminal_output: str,
+        agent_response: str = "",
     ) -> list[dict[str, Any]]:
         """诊断当前 episode 中的错误层面。"""
         findings: list[dict[str, Any]] = []
-        combined = terminal_output.lower() + "\n" + " ".join(commands).lower()
+        combined = "\n".join(
+            [terminal_output.lower(), " ".join(commands).lower(), agent_response.lower()]
+        )
 
         for layer, signals in self.LAYER_SIGNALS.items():
             for signal in signals:
@@ -418,6 +488,14 @@ class TernaryEvaluator:
         combined = (terminal_output or "") + " " + " ".join(commands)
         combined_l = combined.lower()
 
+        # 当前环境证据证明成功时，优先于滚动终端中的历史错误。
+        if has_output_file and self._has_success_signal(combined_l):
+            return (
+                TernaryFeedback.CORRECT,
+                "输出文件已生成且验证命令通过。",
+                "继续核对剩余约束；全部满足后再确认完成。",
+            )
+
         # 不可修复的条件
         if is_analysis_loop and episode > 10:
             return (
@@ -456,13 +534,6 @@ class TernaryEvaluator:
             )
 
         # 正确的条件
-        if has_output_file and self._has_success_signal(combined_l):
-            return (
-                TernaryFeedback.CORRECT,
-                "输出文件已生成且测试通过。",
-                "继续验证其他约束是否满足。",
-            )
-
         if distance_score is not None and distance_score < 0.2:
             return (
                 TernaryFeedback.CORRECT,
@@ -492,20 +563,33 @@ class AdaptiveEpisodeManager:
     - 恢复尝试时延长
     """
 
-    def __init__(self, base_max_episodes: int = 25):
+    def __init__(
+        self,
+        base_max_episodes: int = 25,
+        extension_size: int = 5,
+        max_extensions: int = 2,
+    ):
         self.base_max = base_max_episodes
+        self.extension_size = extension_size
+        self.max_extensions = max_extensions
         self._progress_history: list[float] = []
-        self._episode_type_history: list[str] = []  # "active", "analysis", "recovery"
+        self._episode_type_history: list[str] = []
+        self._extensions_granted = 0
 
     def record_episode(self, episode_type: str, progress: float = 0.0):
         """记录 episode 类型和进度。"""
         self._episode_type_history.append(episode_type)
         self._progress_history.append(progress)
 
-    def should_extend(self, current_episode: int) -> bool:
+    def should_extend(
+        self, current_episode: int, current_limit: int | None = None
+    ) -> bool:
         """判断是否需要延长 episode 限制。"""
-        if current_episode < self.base_max:
-            return False  # 未到基础限制
+        limit = current_limit or self.base_max
+        if current_episode + 1 < limit:
+            return False
+        if self._extensions_granted >= self.max_extensions:
+            return False
 
         recent = (
             self._episode_type_history[-5:]
@@ -517,28 +601,16 @@ class AdaptiveEpisodeManager:
         if recent.count("analysis") >= 3:
             return False
 
-        # 正在恢复 → 延长
-        if "recovery" in recent:
-            return True
+        productive = sum(kind in {"active", "recovery"} for kind in recent)
+        recent_progress = self._progress_history[-len(recent) :]
+        return productive >= 3 and sum(recent_progress) > 0
 
-        # 积极工作但慢 → 延长
-        if recent.count("active") >= 3:
-            # 检查是否有进展
-            recent_progress = (
-                self._progress_history[-5:]
-                if len(self._progress_history) >= 5
-                else self._progress_history
-            )
-            if len(recent_progress) >= 2 and recent_progress[-1] > recent_progress[0]:
-                return True
-
-        return False
-
-    def get_max_episodes(self, current_episode: int) -> int:
-        """返回当前建议的最大 episode 数。"""
-        if self.should_extend(current_episode):
-            return current_episode + 10  # 每次延长 10 轮
-        return self.base_max
+    def extend_limit(self, current_episode: int, current_limit: int) -> int:
+        """在边界处消费一次扩展机会并返回新上限。"""
+        if not self.should_extend(current_episode, current_limit):
+            return current_limit
+        self._extensions_granted += 1
+        return current_limit + self.extension_size
 
 
 # ──────────────────────────────────────────────
@@ -558,6 +630,7 @@ class ProcessGuidanceEngine:
 
         self._episodes_processed: int = 0
         self._last_guidance: str = ""
+        self.last_feedback_level: str = TernaryFeedback.RECOVERABLE
 
     def process_episode(
         self,
@@ -568,6 +641,8 @@ class ProcessGuidanceEngine:
         distance_score: float | None = None,
         is_analysis_loop: bool = False,
         has_output_file: bool = False,
+        is_productive: bool = False,
+        agent_response: str = "",
     ) -> str:
         """处理单个 episode，返回引导提示文本。
 
@@ -592,11 +667,12 @@ class ProcessGuidanceEngine:
             terminal_output,
             total_episodes,
             has_output_file=has_output_file,
+            agent_response=agent_response,
         )
 
         # 2. 层面诊断
         layer_findings = self.layer_diagnoser.diagnose(
-            episode, commands, terminal_output
+            episode, commands, terminal_output, agent_response
         )
 
         # 3. 三元反馈评估
@@ -608,32 +684,29 @@ class ProcessGuidanceEngine:
             is_analysis_loop,
             has_output_file,
         )
+        self.last_feedback_level = fb_level
 
         # 4. 确定 episode 类型
         if is_analysis_loop:
             episode_type = "analysis"
-        elif cognitive_errors and any(
-            e.type == "premature_success" for e in cognitive_errors
-        ):
+        elif is_productive and fb_level == TernaryFeedback.RECOVERABLE:
             episode_type = "recovery"
-        elif has_output_file or ("write" in " ".join(commands).lower()):
+        elif is_productive or has_output_file:
             episode_type = "active"
         else:
-            episode_type = "active"
+            episode_type = "idle"
 
-        # 估算进度（如果有距离分数）
-        progress = 1.0 - (distance_score or 1.0)
+        if distance_score is not None:
+            progress = max(0.0, 1.0 - distance_score)
+        elif has_output_file:
+            progress = 1.0
+        elif is_productive:
+            progress = 0.25
+        else:
+            progress = 0.0
         self.episode_manager.record_episode(episode_type, progress)
 
-        # 5. 检查是否需要自适应延长
-        extension_note = ""
-        if self.episode_manager.should_extend(episode):
-            new_max = self.episode_manager.get_max_episodes(episode)
-            extension_note = (
-                f"\n（系统：检测到你在积极工作，已将 episode 上限延长至 {new_max}。）"
-            )
-
-        # 6. 组合引导文本
+        # 5. 组合引导文本。预算扩展由拥有实际循环上限的调用方执行。
         guidance_parts = [f"【过程引导 - Episode {episode}】"]
 
         # 三元反馈
@@ -652,10 +725,6 @@ class ProcessGuidanceEngine:
         if layer_findings and fb_level != TernaryFeedback.CORRECT:
             lf = layer_findings[0]  # 最高优先级的发现
             guidance_parts.append(f"\n🔍 {lf['hint']}")
-
-        # 自适应延长
-        if extension_note:
-            guidance_parts.append(extension_note)
 
         # 框架信息（如果距离分数可用）
         if distance_score is not None:
