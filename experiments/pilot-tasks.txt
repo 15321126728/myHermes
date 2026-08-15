@@ -1,0 +1,23 @@
+# Knowledge-document and task-specific comprehension tasks
+feal-differential-cryptanalysis
+dna-assembly
+protein-assembly
+torch-tensor-parallelism
+constraints-scheduling
+analyze-access-logs
+heterogeneous-dates
+csv-to-parquet
+
+# Generic artifact, transformation, and failure-recovery tasks
+hello-world
+jsonl-aggregator
+organization-json-generator
+tree-directory-parser
+recover-accuracy-log
+pandas-etl
+deterministic-tarball
+log-summary
+financial-document-processor
+fix-permissions
+broken-python
+jq-data-processing

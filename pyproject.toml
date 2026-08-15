@@ -10,6 +10,7 @@ dependencies = ["terminal-bench==0.2.18"]
 
 [project.scripts]
 hermes-agent = "hermes_agent.runner:main"
+hermes-ablation = "hermes_agent.experiment:main"
 
 [dependency-groups]
 dev = ["pytest>=8.3.4", "ruff>=0.12.0"]

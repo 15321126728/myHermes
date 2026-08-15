@@ -26,6 +26,7 @@ from typing import Any
 from terminal_bench.llms.chat import Chat
 from terminal_bench.terminal.tmux_session import TmuxSession
 
+from hermes_agent.ablation import AblationConfig
 from hermes_agent.intervened_terminus import IntervenedTerminusAgent
 from hermes_agent.process_guidance import (
     ProcessGuidanceEngine,
@@ -69,6 +70,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         guidance_base_max: int | None = None,  # 默认与实际运行上限一致
         # --- 知识提示参数 ---
         knowledge_file: str | None = None,  # 容器内路径；未设置时按任务自动发现
+        ablation_config: dict[str, bool] | None = None,
         **kwargs: Any,
     ):
         knowledge_max_hints = int(kwargs.pop("knowledge_max_hints", 3))
@@ -76,6 +78,16 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
             kwargs.pop("enable_comprehension_check", True)
         )
         max_trajectory_resets = int(kwargs.pop("max_trajectory_resets", 1))
+        config = AblationConfig.from_mapping(ablation_config)
+        if not enable_process_guidance:
+            config = config.with_disabled(
+                "cognitive_detection",
+                "layer_diagnosis",
+                "ternary_feedback",
+                "adaptive_episodes",
+            )
+        if not enable_comprehension_check:
+            config = config.with_disabled("comprehension_check")
         super().__init__(
             model_name=model_name,
             max_episodes=max_episodes,
@@ -97,12 +109,14 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         )
 
         # 过程引导引擎
-        self._enable_process_guidance = enable_process_guidance
+        self._ablation_config = config
+        self._enable_process_guidance = config.process_guidance_enabled()
         self._guidance_engine: ProcessGuidanceEngine | None = None
-        if enable_process_guidance:
+        if self._enable_process_guidance:
             self._guidance_engine = ProcessGuidanceEngine(
                 task_id=guidance_task_id,
                 base_max_episodes=guidance_base_max or self._max_episodes,
+                ablation_config=config,
             )
 
         self._guidance_task_id = guidance_task_id
@@ -113,16 +127,18 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
             "feal-differential-cryptanalysis": "/app/KNOWLEDGE_FEAL.md",
             "protein-assembly": "/app/KNOWLEDGE_FUSION.md",
         }
-        self._knowledge_file = knowledge_file or task_knowledge_files.get(
-            guidance_task_id
-        )
+        self._knowledge_file = None
+        if config.knowledge_hints:
+            self._knowledge_file = knowledge_file or task_knowledge_files.get(
+                guidance_task_id
+            )
         self._knowledge_available: bool | None = None
         self._knowledge_hint_sent: bool = False
         self._knowledge_hint_count: int = 0
         self._knowledge_max_hints = max(0, knowledge_max_hints)
 
         # 任务理解校验状态
-        self._comprehension_enabled = enable_comprehension_check
+        self._comprehension_enabled = config.comprehension_check
         self._comprehension_sent: bool = False  # 是否已向 agent 提问
         self._comprehension_checked: bool = False  # 是否已检查 agent 的回答
         self._comprehension_episode: int = 0  # 提问所在的 episode
@@ -135,10 +151,20 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         self._output_file_path: str = ""
         self._artifact_requirement_detected = False
 
+        self._trajectory_records.append(
+            {
+                "record_type": "run_config",
+                "ablation": config.as_dict(),
+                "guidance_task_id": guidance_task_id,
+                "base_episode_limit": guidance_base_max or self._max_episodes,
+                "initial_episode_limit": self._max_episodes,
+            }
+        )
+
         self._logger.info(
             f"GuidedInterventionAgent initialized: "
             f"task={guidance_task_id}, "
-            f"process_guidance={enable_process_guidance}, "
+            f"process_guidance={self._enable_process_guidance}, "
             f"base_max={guidance_base_max}"
         )
 
@@ -520,9 +546,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
 
     def _build_comprehension_prompt(self, instruction: str = "") -> str:
         """构造 Ep0 的理解校验问题文本。"""
-        questions = list(
-            self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, [])
-        )
+        questions = list(self.COMPREHENSION_QUESTIONS.get(self._guidance_task_id, []))
         if not questions and instruction:
             contract = TaskContract.from_instruction(instruction)
             if contract.output_paths:
@@ -574,13 +598,15 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
         lines = [
             "在开始执行任务之前，请先用你自己的话回答以下几个问题，"
             "以确认你对任务的理解。然后才开始执行。",
-            "请直接回答（不用执行命令）：",
+            "你仍然必须使用系统要求的结构化 JSON 响应格式。请把编号回答写入 "
+            "JSON 的 `analysis` 字段；不要返回 JSON 之外的自然语言。",
+            "你可以在同一个 JSON 响应中给出合法的 `commands`，也可以暂时使用空列表。",
             "",
         ]
         for i, q in enumerate(questions, 1):
             lines.append(f"Q{i}. {q['question']}")
         lines.append("")
-        lines.append("（这只用于确认理解，不会影响最终评分。回答完即可开始执行任务。）")
+        lines.append("（这只用于确认理解，不会影响最终评分。）")
         return "\n".join(lines)
 
     def _check_comprehension(
@@ -800,7 +826,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                 _, terminal_output = self._execute_commands(commands, session)
 
                 # 每轮都从容器验证声明的输出产物，而不是等待最终测试。
-                if not replay_mode:
+                if not replay_mode and self._ablation_config.runtime_verification:
                     self._has_output_file = self._check_output_file(
                         terminal_output, session, original_instruction
                     )
@@ -877,7 +903,10 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                             }
                         )
                         continue
-                    if self._artifact_requirement_detected and not self._has_output_file:
+                    if (
+                        self._artifact_requirement_detected
+                        and not self._has_output_file
+                    ):
                         self._pending_completion = False
                         prompt = (
                             "Completion was rejected by the runtime verifier: one or "
@@ -950,12 +979,16 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                             "episode": episode,
                             "intervention_type": "process_guidance",
                             "guidance": guidance,
+                            "diagnostics": self._guidance_engine.last_diagnostics,
                         }
                     )
 
                     # 检查是否需要自适应延长
                     manager = self._guidance_engine.episode_manager
-                    if manager.should_extend(episode, self._max_episodes):
+                    if (
+                        self._ablation_config.adaptive_episodes
+                        and manager.should_extend(episode, self._max_episodes)
+                    ):
                         new_max = manager.extend_limit(episode, self._max_episodes)
                         self._logger.info(
                             f"[自适应延长] Episode {episode}: 上限从 {self._max_episodes} 延长至 {new_max}"
@@ -1037,6 +1070,14 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                 )
 
         finally:
+            if self._trajectory_records:
+                first_record = self._trajectory_records[0]
+                if first_record.get("record_type") == "run_config":
+                    first_record["effective_episode_limit"] = self._max_episodes
+                    if self._guidance_engine:
+                        manager = self._guidance_engine.episode_manager
+                        first_record["extensions_granted"] = manager.extensions_granted
+
             # ── 快照落盘 ──
             if self._enable_episode_snapshots:
                 self._save_episode_snapshots()
@@ -1096,9 +1137,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                 "json.dump(",
                 "pickle.dump(",
             )
-            opens_for_write = re.search(
-                r"open\s*\([^)]*,\s*['\"][wax+]", cmd
-            )
+            opens_for_write = re.search(r"open\s*\([^)]*,\s*['\"][wax+]", cmd)
             if opens_for_write or any(signal in cmd for signal in write_signals):
                 return True
             read_signals = ("open(", ".read()", ".read_text(", "for line in")
@@ -1112,9 +1151,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
             return True
 
         # 文件复制/移动
-        if cmd.startswith(
-            ("cp ", "mv ", "install ", "make ", "cmake ", "docker ")
-        ):
+        if cmd.startswith(("cp ", "mv ", "install ", "make ", "cmake ", "docker ")):
             return True
 
         return False
@@ -1155,9 +1192,7 @@ class GuidedInterventionAgent(IntervenedTerminusAgent):
                     "for line in",
                 ]
             )
-            has_write = bool(
-                re.search(r"open\s*\([^)]*,\s*['\"][wax+]", cmd)
-            ) or any(
+            has_write = bool(re.search(r"open\s*\([^)]*,\s*['\"][wax+]", cmd)) or any(
                 kw in cmd
                 for kw in (
                     ".write(",

@@ -169,8 +169,8 @@ The current release has the following verified evidence:
 
 - clean installation against the published `terminal-bench==0.2.18` package;
 - Ruff static checks pass;
-- package tests pass (`16 passed`), including direct tests for all seven guidance
-  mechanisms and CLI wiring;
+- package tests pass (`25 passed`), including direct tests for all seven guidance
+  mechanisms, independent ablation switches, matrix generation, and CLI wiring;
 - source distribution and wheel build successfully;
 - a real Docker-backed `hello-world` run completed with `1/1` resolved and
   `100%` accuracy using the extracted package.

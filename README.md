@@ -24,6 +24,8 @@ caches, experiment reports, and API credentials.
 
 For a detailed comparison with the classic Terminus2 baseline, including
 limitations and validation evidence, see [IMPROVEMENTS.md](IMPROVEMENTS.md).
+For the controlled seven-mechanism ablation protocol, see
+[ABLATION_STUDY.md](ABLATION_STUDY.md).
 
 ## Install
 
@@ -75,6 +77,22 @@ uv run hermes-agent \
 
 Generated trajectories are written below `runs/<run-id>/`. Use
 `--no-process-guidance` or `--no-comprehension-check` for ablation runs.
+
+## Ablation experiments
+
+Generate the primary Base/Full/leave-one-out matrix without making API calls:
+
+```bash
+uv run hermes-ablation \
+  --dataset-path /path/to/terminal-bench/original-tasks \
+  --task-file experiments/pilot-tasks.txt \
+  --experiment-id ablation-pilot-v2 \
+  --dry-run
+```
+
+Remove `--dry-run` to execute or resume it. Trial outcomes are written to
+`results.csv`; aggregate and paired Full comparisons are written to
+`summary.json`.
 
 ## Development
 

@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -38,6 +39,7 @@ class Terminus2(BaseAgent):
         temperature: float = 0.7,
         timeout: int = 30,
         deterministic_completion: bool = False,
+        seed: int | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -48,6 +50,7 @@ class Terminus2(BaseAgent):
             api_base=api_base,
             temperature=temperature,
             timeout=timeout,
+            seed=seed,
         )
         self._parser = self._get_parser()
         self._prompt_template = self._get_prompt_template_path().read_text()
@@ -67,6 +70,7 @@ class Terminus2(BaseAgent):
         self._timestamped_markers: list[tuple[float, str]] = []
         self._pending_completion = False
         self._deterministic_completion = deterministic_completion
+        self._seed = seed
         self._proactive_summarization_threshold = (
             0  # 0=disabled (prevents summarization death spiral)
         )
@@ -470,12 +474,24 @@ class Terminus2(BaseAgent):
         for msg in chat._messages:
             if msg["role"] == "assistant":
                 content = msg["content"]
-                # 尝试提取 JSON 中的 commands 部分，丢弃 analysis/plan
                 try:
-                    # 简单启发式：找到 commands 数组并只保留它
-                    if '"commands"' in content:
-                        # 截取到 commands 部分即可
-                        msg["content"] = "[Previous commands executed]"
+                    if self._parser_name == "json" and '"commands"' in content:
+                        parsed = self._parser.parse_response(content)
+                        if not parsed.error:
+                            msg["content"] = json.dumps(
+                                {
+                                    "commands": [
+                                        {
+                                            "keystrokes": command.keystrokes,
+                                            "duration": command.duration,
+                                        }
+                                        for command in parsed.commands
+                                    ],
+                                    "analysis": "Previous commands were executed.",
+                                    "plan": "Use the current terminal state.",
+                                    "task_complete": parsed.is_task_complete,
+                                }
+                            )
                 except Exception:
                     pass
             stripped.append(msg)

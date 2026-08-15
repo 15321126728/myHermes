@@ -27,6 +27,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from hermes_agent.ablation import AblationConfig
+
 # ──────────────────────────────────────────────
 # 错误类型定义
 # ──────────────────────────────────────────────
@@ -285,7 +287,10 @@ class CognitiveErrorDetector:
         # 领域限制仍归入五类中的工具选择错误，不创造第六种认知类型。
         if self.task_signals:
             for forbidden in self.task_signals.get("forbidden_patterns", []):
-                if forbidden in combined_text and forbidden not in self._reported_forbidden:
+                if (
+                    forbidden in combined_text
+                    and forbidden not in self._reported_forbidden
+                ):
                     self._reported_forbidden.add(forbidden)
                     errors.append(
                         CognitiveError(
@@ -417,7 +422,11 @@ class LayerDiagnoser:
         """诊断当前 episode 中的错误层面。"""
         findings: list[dict[str, Any]] = []
         combined = "\n".join(
-            [terminal_output.lower(), " ".join(commands).lower(), agent_response.lower()]
+            [
+                terminal_output.lower(),
+                " ".join(commands).lower(),
+                agent_response.lower(),
+            ]
         )
 
         for layer, signals in self.LAYER_SIGNALS.items():
@@ -519,6 +528,13 @@ class TernaryEvaluator:
                 "请仔细阅读错误信息，定位问题所在。常见原因：文件路径不正确、格式不符合要求、缺少必要步骤。",
             )
 
+        if has_output_file:
+            return (
+                TernaryFeedback.CORRECT,
+                "运行时验证确认声明的输出产物存在且非空。",
+                "若其内容也满足任务约束，请确认完成；否则只修正尚未满足的约束。",
+            )
+
         if is_analysis_loop:
             return (
                 TernaryFeedback.RECOVERABLE,
@@ -612,6 +628,10 @@ class AdaptiveEpisodeManager:
         self._extensions_granted += 1
         return current_limit + self.extension_size
 
+    @property
+    def extensions_granted(self) -> int:
+        return self._extensions_granted
+
 
 # ──────────────────────────────────────────────
 # 主引导引擎
@@ -621,8 +641,14 @@ class AdaptiveEpisodeManager:
 class ProcessGuidanceEngine:
     """过程引导引擎 — 综合分析轨迹并生成引导。"""
 
-    def __init__(self, task_id: str, base_max_episodes: int = 25):
+    def __init__(
+        self,
+        task_id: str,
+        base_max_episodes: int = 25,
+        ablation_config: AblationConfig | None = None,
+    ):
         self.task_id = task_id
+        self.ablation_config = ablation_config or AblationConfig()
         self.cognitive_detector = CognitiveErrorDetector(task_id)
         self.layer_diagnoser = LayerDiagnoser()
         self.ternary_evaluator = TernaryEvaluator()
@@ -630,7 +656,8 @@ class ProcessGuidanceEngine:
 
         self._episodes_processed: int = 0
         self._last_guidance: str = ""
-        self.last_feedback_level: str = TernaryFeedback.RECOVERABLE
+        self.last_feedback_level: str | None = None
+        self.last_diagnostics: dict[str, Any] = {}
 
     def process_episode(
         self,
@@ -661,29 +688,37 @@ class ProcessGuidanceEngine:
         self._episodes_processed += 1
 
         # 1. 检测认知错误
-        cognitive_errors = self.cognitive_detector.analyze_episode(
-            episode,
-            commands,
-            terminal_output,
-            total_episodes,
-            has_output_file=has_output_file,
-            agent_response=agent_response,
-        )
+        cognitive_errors = []
+        if self.ablation_config.cognitive_detection:
+            cognitive_errors = self.cognitive_detector.analyze_episode(
+                episode,
+                commands,
+                terminal_output,
+                total_episodes,
+                has_output_file=has_output_file,
+                agent_response=agent_response,
+            )
 
         # 2. 层面诊断
-        layer_findings = self.layer_diagnoser.diagnose(
-            episode, commands, terminal_output, agent_response
-        )
+        layer_findings = []
+        if self.ablation_config.layer_diagnosis:
+            layer_findings = self.layer_diagnoser.diagnose(
+                episode, commands, terminal_output, agent_response
+            )
 
         # 3. 三元反馈评估
-        fb_level, fb_message, fb_guidance = self.ternary_evaluator.evaluate(
-            episode,
-            commands,
-            terminal_output,
-            distance_score,
-            is_analysis_loop,
-            has_output_file,
-        )
+        fb_level = None
+        fb_message = ""
+        fb_guidance = ""
+        if self.ablation_config.ternary_feedback:
+            fb_level, fb_message, fb_guidance = self.ternary_evaluator.evaluate(
+                episode,
+                commands,
+                terminal_output,
+                distance_score,
+                is_analysis_loop,
+                has_output_file,
+            )
         self.last_feedback_level = fb_level
 
         # 4. 确定 episode 类型
@@ -704,25 +739,41 @@ class ProcessGuidanceEngine:
             progress = 0.25
         else:
             progress = 0.0
-        self.episode_manager.record_episode(episode_type, progress)
+        if self.ablation_config.adaptive_episodes:
+            self.episode_manager.record_episode(episode_type, progress)
+
+        self.last_diagnostics = {
+            "episode": episode,
+            "cognitive_errors": [error.type for error in cognitive_errors],
+            "diagnosis_layers": [finding["layer"] for finding in layer_findings],
+            "feedback_level": fb_level,
+            "episode_type": episode_type,
+            "progress": progress,
+        }
 
         # 5. 组合引导文本。预算扩展由拥有实际循环上限的调用方执行。
-        guidance_parts = [f"【过程引导 - Episode {episode}】"]
+        guidance_parts = []
 
         # 三元反馈
-        guidance_parts.append(f"\n{fb_level}")
-        guidance_parts.append(f"状态：{fb_message}")
-        if fb_guidance:
-            guidance_parts.append(f"建议：{fb_guidance}")
+        if fb_level is not None:
+            guidance_parts.append(f"【过程引导 - Episode {episode}】")
+            guidance_parts.append(f"\n{fb_level}")
+            guidance_parts.append(f"状态：{fb_message}")
+            if fb_guidance:
+                guidance_parts.append(f"建议：{fb_guidance}")
 
         # 认知错误
         if cognitive_errors and fb_level != TernaryFeedback.CORRECT:
+            if not guidance_parts:
+                guidance_parts.append(f"【过程引导 - Episode {episode}】")
             # 只取第一个最严重的认知错误
             ce = cognitive_errors[0]
             guidance_parts.append(f"\n⚠️ 认知提示：{ce.suggested_hint}")
 
         # 层面诊断
         if layer_findings and fb_level != TernaryFeedback.CORRECT:
+            if not guidance_parts:
+                guidance_parts.append(f"【过程引导 - Episode {episode}】")
             lf = layer_findings[0]  # 最高优先级的发现
             guidance_parts.append(f"\n🔍 {lf['hint']}")
 

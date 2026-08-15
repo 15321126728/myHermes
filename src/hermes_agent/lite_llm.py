@@ -47,6 +47,7 @@ class LiteLLM(BaseLLM):
         temperature: float = 0.7,
         api_base: str | None = None,
         timeout: int = 30,
+        seed: int | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -55,6 +56,7 @@ class LiteLLM(BaseLLM):
         self._supported_params = get_supported_openai_params(model_name)
         self._api_base = api_base
         self._timeout = timeout
+        self._seed = seed
 
         # ── httpx / 代理超时配置 ──
         # 设置全局 httpx 请求超时（避免 API 调用长时间挂起）
@@ -77,9 +79,11 @@ class LiteLLM(BaseLLM):
         if self._supported_params is not None:
             self._supports_response_format = "response_format" in self._supported_params
             self._supports_temperature = "temperature" in self._supported_params
+            self._supports_seed = "seed" in self._supported_params
         else:
             self._supports_response_format = False
             self._supports_temperature = False
+            self._supports_seed = False
 
         # DeepSeek-compatible endpoints used in these experiments have repeatedly
         # returned BadRequest when LiteLLM sends native response_format, even when
@@ -186,6 +190,9 @@ class LiteLLM(BaseLLM):
         messages = add_anthropic_caching(messages, self._model_name)
 
         try:
+            optional_params = {}
+            if self._seed is not None and self._supports_seed:
+                optional_params["seed"] = self._seed
             response = litellm.completion(
                 model=self._model_name,
                 messages=messages,
@@ -195,6 +202,7 @@ class LiteLLM(BaseLLM):
                 logger_fn=logger_fn,
                 api_base=self._api_base,
                 timeout=self._timeout,
+                **optional_params,
                 **kwargs,
             )
         except Exception as e:

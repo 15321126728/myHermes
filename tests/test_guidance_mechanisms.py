@@ -1,5 +1,6 @@
 import inspect
 import sys
+from types import SimpleNamespace
 
 from hermes_agent import runner
 from hermes_agent.guided_intervention import GuidedInterventionAgent
@@ -52,9 +53,7 @@ def test_cognitive_detector_has_exactly_five_documented_categories() -> None:
         "analysis_paralysis",
     }
 
-    errors = detector.analyze_episode(
-        0, ["cat input.csv"], "invalid csv format", 10
-    )
+    errors = detector.analyze_episode(0, ["cat input.csv"], "invalid csv format", 10)
     assert "format_misunderstanding" in {error.type for error in errors}
     assert detector.get_progress_summary()["read_count"] == 1
 
@@ -98,11 +97,15 @@ def test_ternary_evaluator_reaches_every_state() -> None:
         1, ["pytest"], "3 tests passed", has_output_file=True
     )
     recoverable, _, _ = evaluator.evaluate(1, [], "Traceback: error")
+    artifact_correct, _, _ = evaluator.evaluate(
+        1, ["cat /app/out.txt"], "expected content", has_output_file=True
+    )
     irrecoverable, _, _ = evaluator.evaluate(
         11, ["cat input"], "still checking", is_analysis_loop=True
     )
     assert correct == TernaryFeedback.CORRECT
     assert recoverable == TernaryFeedback.RECOVERABLE
+    assert artifact_correct == TernaryFeedback.CORRECT
     assert irrecoverable == TernaryFeedback.IRRECOVERABLE
 
 
@@ -134,6 +137,31 @@ def test_productive_classifier_does_not_reward_python_reads() -> None:
         "python -c \"open('/app/out.txt', 'w').write('ok')\""
     )
     assert agent._is_productive_command("sed -i 's/old/new/' /app/config")
+
+
+def test_history_compaction_preserves_valid_json_commands() -> None:
+    agent = make_agent()
+    chat = SimpleNamespace(
+        _messages=[
+            {
+                "role": "assistant",
+                "content": (
+                    '{"commands":[{"keystrokes":"echo ok\\n",'
+                    '"duration":0.1}],"analysis":"long","plan":"next",'
+                    '"task_complete":false}'
+                ),
+            }
+        ]
+    )
+
+    agent._strip_self_analysis(chat)
+
+    compacted = chat._messages[0]["content"]
+    parsed = agent._parser.parse_response(compacted)
+    assert parsed.error == ""
+    assert parsed.commands[0].keystrokes == "echo ok\n"
+    assert "long" not in compacted
+    assert "Previous commands were executed." in compacted
 
 
 def test_runtime_output_validation_requires_nonempty_container_file() -> None:
@@ -171,6 +199,8 @@ def test_generic_comprehension_check_is_machine_verifiable() -> None:
         "Transform the source safely. Create /app/a.json and /app/b.json."
     )
     assert "/app/a.json" not in prompt
+    assert "JSON" in prompt
+    assert "analysis" in prompt
 
     failed, _ = agent._check_comprehension("I will create /app/a.json", "")
     assert failed
@@ -181,9 +211,7 @@ def test_generic_comprehension_check_is_machine_verifiable() -> None:
     assert feedback == ""
 
 
-def test_cli_defaults_to_guided_agent_and_passes_task_id(
-    monkeypatch, tmp_path
-) -> None:
+def test_cli_defaults_to_guided_agent_and_passes_task_id(monkeypatch, tmp_path) -> None:
     captured = {}
 
     class Result:
